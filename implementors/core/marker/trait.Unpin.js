@@ -1,0 +1,3 @@
+(function() {var implementors = {};
+implementors["fido"] = [{"text":"impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.57.0/core/marker/trait.Unpin.html\" title=\"trait core::marker::Unpin\">Unpin</a> for <a class=\"struct\" href=\"fido/lib/integrations/business_central/struct.Config.html\" title=\"struct fido::lib::integrations::business_central::Config\">Config</a>","synthetic":true,"types":["fido::lib::integrations::business_central::Config"]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()
