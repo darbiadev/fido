@@ -41,7 +41,7 @@ pub(crate) fn build_cli() -> App<'static> {
 
 pub(crate) fn process_matches(config_builder: Figment, matches: ArgMatches) {
     if let Some(matches) = matches.subcommand_matches("business-central") {
-        crate::lib::integrations::business_central::process_matches(config_builder, matches)
+        crate::lib::integrations::business_central::cli::process_matches(config_builder, matches)
     }
 }
 
