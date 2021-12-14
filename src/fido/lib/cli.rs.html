@@ -99,7 +99,7 @@
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">process_matches</span>(<span class="ident">config_builder</span>: <span class="ident">Figment</span>, <span class="ident">matches</span>: <span class="ident">ArgMatches</span>) {
     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">matches</span>) <span class="op">=</span> <span class="ident">matches</span>.<span class="ident">subcommand_matches</span>(<span class="string">&quot;business-central&quot;</span>) {
-        <span class="ident"><span class="kw">crate</span>::lib::integrations::business_central::process_matches</span>(<span class="ident">config_builder</span>, <span class="ident">matches</span>)
+        <span class="ident"><span class="kw">crate</span>::lib::integrations::business_central::cli::process_matches</span>(<span class="ident">config_builder</span>, <span class="ident">matches</span>)
     }
 }
 

@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["get_order",""],["process_matches",""]],"struct":[["Config",""]]});
+initSidebarItems({"mod":[["cli",""]]});
