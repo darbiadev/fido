@@ -9,6 +9,7 @@ pub(crate) fn build_cli() -> App<'static> {
         .arg(
             Arg::new("verbose")
                 .short('v')
+                .conflicts_with("quiet")
                 .help("Sets the level of verbosity")
                 .multiple_occurrences(true),
         )
@@ -16,6 +17,7 @@ pub(crate) fn build_cli() -> App<'static> {
             Arg::new("quiet")
                 .short('q')
                 .long("quiet")
+                .conflicts_with("verbose")
                 .help("Suppresses all output"),
         )
         .arg(
@@ -27,15 +29,20 @@ pub(crate) fn build_cli() -> App<'static> {
                 .takes_value(true),
         )
         .subcommand(
-            App::new("business-central").subcommand(
-                App::new("orders").subcommand(
-                    App::new("get").arg(
-                        Arg::new("order-number")
-                            .help("Order number")
-                            .takes_value(true),
+            App::new("business-central")
+                .about("Interact with Business Central")
+                .subcommand(
+                    App::new("orders").about("Interact with orders").subcommand(
+                        App::new("get")
+                            .about("Get order")
+                            .long_about("Get an order from Business Central")
+                            .arg(
+                                Arg::new("order-number")
+                                    .help("Order number")
+                                    .takes_value(true),
+                            ),
                     ),
                 ),
-            ),
         )
 }
 

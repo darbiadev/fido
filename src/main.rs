@@ -1,7 +1,5 @@
 //! Fido
 
-use std::error::Error;
-
 use figment::{
     providers::{Env, Format, Toml},
     Figment,
@@ -12,7 +10,7 @@ use crate::lib::cli::{build_cli, process_matches};
 mod lib;
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn Error>> {
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut config_toml_path = dirs::config_dir().expect("Failed to get user config directory");
     config_toml_path.push("darbia");
     config_toml_path.push("fido.toml");
