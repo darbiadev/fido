@@ -8,8 +8,7 @@ pub(crate) fn build_cli() -> App<'static> {
         .author(crate_authors!("\n"))
         .global_setting(AppSettings::InferLongArgs)
         .global_setting(AppSettings::InferSubcommands)
-        .global_setting(AppSettings::SubcommandRequiredElseHelp)
-        .global_setting(AppSettings::DontCollapseArgsInUsage)
+        .setting(AppSettings::SubcommandRequiredElseHelp)
         .arg(
             Arg::new("verbose")
                 .short('v')
@@ -48,11 +47,31 @@ pub(crate) fn build_cli() -> App<'static> {
                     ),
                 ),
         )
+        .subcommand(
+            App::new("zendesk")
+                .about("Interact with Zendesk")
+                .subcommand(
+                    App::new("tickets")
+                        .about("Interact with tickets")
+                        .subcommand(
+                            App::new("get")
+                                .about("Get ticket")
+                                .long_about("Get a ticket from Zendesk")
+                                .arg(
+                                    Arg::new("ticket-number")
+                                        .help("Ticket number")
+                                        .takes_value(true),
+                                ),
+                        ),
+                ),
+        )
 }
 
 pub(crate) fn process_matches(config_builder: Figment, matches: ArgMatches) {
     if let Some(matches) = matches.subcommand_matches("business-central") {
         crate::lib::integrations::business_central::cli::process_matches(config_builder, matches)
+    } else if let Some(matches) = matches.subcommand_matches("zendesk") {
+        crate::lib::integrations::zendesk::cli::process_matches(config_builder, matches)
     }
 }
 
