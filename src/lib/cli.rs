@@ -1,4 +1,4 @@
-use clap::{crate_authors, crate_version, App, Arg, ArgMatches};
+use clap::{crate_authors, crate_version, App, AppSettings, Arg, ArgMatches};
 use figment::Figment;
 
 pub(crate) fn build_cli() -> App<'static> {
@@ -6,6 +6,10 @@ pub(crate) fn build_cli() -> App<'static> {
         .about("FIDO CLI")
         .version(crate_version!())
         .author(crate_authors!("\n"))
+        .global_setting(AppSettings::InferLongArgs)
+        .global_setting(AppSettings::InferSubcommands)
+        .global_setting(AppSettings::SubcommandRequiredElseHelp)
+        .global_setting(AppSettings::DontCollapseArgsInUsage)
         .arg(
             Arg::new("verbose")
                 .short('v')
