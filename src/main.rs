@@ -28,11 +28,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     let mut log_level = match matches.occurrences_of("verbose") {
-        4 => tracing_subscriber::filter::LevelFilter::TRACE,
-        3 => tracing_subscriber::filter::LevelFilter::DEBUG,
-        2 => tracing_subscriber::filter::LevelFilter::INFO,
+        0 => tracing_subscriber::filter::LevelFilter::ERROR,
         1 => tracing_subscriber::filter::LevelFilter::WARN,
-        _ => tracing_subscriber::filter::LevelFilter::ERROR,
+        2 => tracing_subscriber::filter::LevelFilter::INFO,
+        3 => tracing_subscriber::filter::LevelFilter::DEBUG,
+        _ => tracing_subscriber::filter::LevelFilter::TRACE,
     };
 
     if matches.is_present("quiet") {
