@@ -1,5 +1,5 @@
 use clap::{crate_authors, crate_version, App, AppSettings, Arg, ArgMatches};
-use figment::Figment;
+use clap_complete::{generate, Generator, Shell};
 
 pub(crate) fn build_cli() -> App<'static> {
     App::new("fido")
@@ -30,6 +30,17 @@ pub(crate) fn build_cli() -> App<'static> {
                 .value_name("FILE")
                 .help("Sets a custom config file")
                 .takes_value(true),
+        )
+        .subcommand(
+            App::new("completions")
+                .about("Generate completions")
+                .long_about("Generate completions for FIDO")
+                .arg(
+                    Arg::new("shell")
+                        .long("shell")
+                        .help("The shell to generate completions for")
+                        .possible_values(Shell::possible_values()),
+                ),
         )
         .subcommand(
             App::new("business-central")
@@ -67,8 +78,17 @@ pub(crate) fn build_cli() -> App<'static> {
         )
 }
 
-pub(crate) fn process_matches(config_builder: Figment, matches: ArgMatches) {
-    if let Some(matches) = matches.subcommand_matches("business-central") {
+fn print_completions<G: Generator>(gen: G, app: &mut App) {
+    generate(gen, app, app.get_name().to_string(), &mut std::io::stdout());
+}
+
+pub(crate) fn process_matches(config_builder: figment::Figment, matches: ArgMatches) {
+    if let Some(matches) = matches.subcommand_matches("completions") {
+        if let Ok(shell) = matches.value_of_t::<Shell>("shell") {
+            let mut app = build_cli();
+            print_completions(shell, &mut app);
+        }
+    } else if let Some(matches) = matches.subcommand_matches("business-central") {
         crate::lib::integrations::business_central::cli::process_matches(config_builder, matches)
     } else if let Some(matches) = matches.subcommand_matches("zendesk") {
         crate::lib::integrations::zendesk::cli::process_matches(config_builder, matches)

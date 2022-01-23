@@ -98,11 +98,15 @@ jobs:
           args: --release --verbose --target=${{ matrix.triple.target }}
           use-cross: ${{ matrix.triple.cross }}
 
-      - name: Move autocomplete to working directory
+      - name: Generate completions
         shell: bash
         run: |
           mkdir completion
-          cp -r ./target/${{ matrix.triple.target }}/release/build/fido-*/out/. completion
+          cd completion
+          ./target/${{ matrix.triple.target }}/release/fido completions --shell bash > fido.bash
+          ./target/${{ matrix.triple.target }}/release/fido completions --shell zsh > _fido
+          ./target/${{ matrix.triple.target }}/release/fido completions --shell fish > fido.fish
+          ./target/${{ matrix.triple.target }}/release/fido completions --shell powershell > _fido.ps1
 
       - name: Strip release binary (macOS or Linux x86-64)
         if: matrix.triple.strip == true
@@ -263,11 +267,15 @@ jobs:
           command: build
           args: --release --verbose
 
-      - name: Move autocomplete to working directory
+      - name: Generate completions
         shell: bash
         run: |
           mkdir completion
-          cp -r ./target/release/build/fido-*/out/. completion
+          cd completion
+          ./target/${{ matrix.triple.target }}/release/fido completions --shell bash > fido.bash
+          ./target/${{ matrix.triple.target }}/release/fido completions --shell zsh > _fido
+          ./target/${{ matrix.triple.target }}/release/fido completions --shell fish > fido.fish
+          ./target/${{ matrix.triple.target }}/release/fido completions --shell powershell > _fido.ps1
 
       - name: Build Debian release
         run: |
