@@ -297,57 +297,6 @@ jobs:
           name: release
           path: release
 
-  generate-choco:
-    needs: [ build-release ]
-    name: generate-choco
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
-
-      - uses: actions/setup-python@v2
-
-      - name: Get release version
-        uses: actions/download-artifact@v2
-        with:
-          name: release-version
-          path: release-version
-
-      - name: Set release version
-        shell: bash
-        run: |
-          release_version="$(cat ./release-version/release-version)"
-          echo "RELEASE_VERSION=$release_version" >> $GITHUB_ENV
-
-      - name: Validate release version
-        run: |
-          echo "Release version: ${{ env.RELEASE_VERSION }}"
-
-      - name: Get release artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: release
-          path: release
-
-      - name: Execute choco packaging script
-        run: |
-          python "./deployment/windows/choco/choco_packager.py" "./release/fido_i686-pc-windows-msvc.zip" "./release/fido_x86_64-pc-windows-msvc.zip" ${{ env.RELEASE_VERSION }} "./deployment/windows/choco/fido.nuspec.template" "./deployment/windows/choco/chocolateyinstall.ps1.template" "fido.nuspec" "tools/chocolateyinstall.ps1" "tools/"
-          zip -r choco.zip "fido.nuspec" "tools"
-
-      - name: Move release file into release directory
-        shell: bash
-        run: |
-          mv choco.zip release/
-
-      - name: Save release as artifact
-        uses: actions/upload-artifact@v2
-        with:
-          retention-days: 3
-          name: release
-          path: release
-
   upload-release:
     name: upload-release
     runs-on: ubuntu-latest
