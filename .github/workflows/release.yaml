@@ -203,7 +203,7 @@ jobs:
       - name: Build msi file
         shell: powershell
         run: |
-          cargo install cargo-wix --version 0.3.1 --locked
+          cargo install cargo-wix
           cargo wix init
           cargo wix
 
@@ -211,7 +211,7 @@ jobs:
         shell: bash
         run: |
           mkdir release
-          mv fido_x86_64_installer.msi release/
+          mv target/wix/fido_x86_64_installer.msi release/
 
       - name: Save release as artifact
         uses: actions/upload-artifact@v2
