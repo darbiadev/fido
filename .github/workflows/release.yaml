@@ -211,7 +211,7 @@ jobs:
         shell: bash
         run: |
           mkdir release
-          mv target/wix/fido-${{ env.RELEASE_VERSION }}-x86_64_installer.msi release/
+          mv target/wix/fido-${{ env.RELEASE_VERSION }}-x86_64.msi release/
 
       - name: Save release as artifact
         uses: actions/upload-artifact@v2
