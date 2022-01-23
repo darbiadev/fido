@@ -211,6 +211,7 @@ jobs:
         shell: bash
         run: |
           find . -maxdepth 4 -type d -ls
+          cargo wix --install
           mkdir release
           mv target/wix/fido_x86_64_installer.msi release/
 
