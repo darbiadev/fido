@@ -102,11 +102,10 @@ jobs:
         shell: bash
         run: |
           mkdir completion
-          cd completion
-          ./target/${{ matrix.triple.target }}/release/fido completions --shell bash > fido.bash
-          ./target/${{ matrix.triple.target }}/release/fido completions --shell zsh > _fido
-          ./target/${{ matrix.triple.target }}/release/fido completions --shell fish > fido.fish
-          ./target/${{ matrix.triple.target }}/release/fido completions --shell powershell > _fido.ps1
+          ./target/${{ matrix.triple.target }}/release/fido completions --shell bash > completion/fido.bash
+          ./target/${{ matrix.triple.target }}/release/fido completions --shell zsh > completion/_fido
+          ./target/${{ matrix.triple.target }}/release/fido completions --shell fish > completion/fido.fish
+          ./target/${{ matrix.triple.target }}/release/fido completions --shell powershell > completion/_fido.ps1
 
       - name: Strip release binary (macOS or Linux x86-64)
         if: matrix.triple.strip == true
@@ -271,11 +270,10 @@ jobs:
         shell: bash
         run: |
           mkdir completion
-          cd completion
-          ./target/${{ matrix.triple.target }}/release/fido completions --shell bash > fido.bash
-          ./target/${{ matrix.triple.target }}/release/fido completions --shell zsh > _fido
-          ./target/${{ matrix.triple.target }}/release/fido completions --shell fish > fido.fish
-          ./target/${{ matrix.triple.target }}/release/fido completions --shell powershell > _fido.ps1
+          ./target/x86_64-unknown-linux-gnu/release/fido completions --shell bash > completion/fido.bash
+          ./target/x86_64-unknown-linux-gnu/release/fido completions --shell zsh > completion/_fido
+          ./target/x86_64-unknown-linux-gnu/release/fido completions --shell fish > completion/fido.fish
+          ./target/x86_64-unknown-linux-gnu/release/fido completions --shell powershell > completion/_fido.ps1
 
       - name: Build Debian release
         run: |
