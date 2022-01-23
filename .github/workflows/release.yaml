@@ -210,6 +210,7 @@ jobs:
       - name: Create release directory for artifact, move files
         shell: bash
         run: |
+          find . -maxdepth 4 -type d -ls
           mkdir release
           mv target/wix/fido_x86_64_installer.msi release/
 
