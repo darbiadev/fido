@@ -24,4 +24,4 @@ business_central = { git = "https://github.com/darbiadev/business-central-rs" }
 zendesk = { git = "https://github.com/darbiadev/zendesk-rs" }
 figment = { version = "0.10.6", features = ["env", "toml"] }
 dirs = "4.0.0"
-futures = "0.3.18"
+futures = "0.3.21"
