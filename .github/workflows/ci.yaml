@@ -33,7 +33,7 @@ jobs:
           paths: '[".cargo/**", ".github/workflows/ci.yml", "sample_configs/**", "src/**", "tests/**", "build.rs", "Cargo.lock", "Cargo.toml", "clippy.toml", "rustfmt.toml"]'
           do_not_skip: '["workflow_dispatch"]'
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
 
       - uses: actions-rs/toolchain@v1
@@ -68,7 +68,7 @@ jobs:
           paths: '[".cargo/**", ".github/workflows/ci.yml", "sample_configs/**", "src/**", "tests/**", "build.rs", "Cargo.lock", "Cargo.toml", "clippy.toml", "rustfmt.toml"]'
           do_not_skip: '["workflow_dispatch"]'
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
 
       - uses: actions-rs/toolchain@v1
@@ -122,7 +122,7 @@ jobs:
           paths: '[".cargo/**", ".github/workflows/ci.yml", "sample_configs/**", "src/**", "tests/**", "build.rs", "Cargo.lock", "Cargo.toml", "clippy.toml", "rustfmt.toml"]'
           do_not_skip: '["workflow_dispatch"]'
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
 
       - name: Install toolchain
@@ -184,7 +184,7 @@ jobs:
           paths: '[".cargo/**", ".github/workflows/ci.yml", "sample_configs/**", "src/**", "tests/**", "build.rs", "Cargo.lock", "Cargo.toml", "clippy.toml", "rustfmt.toml"]'
           do_not_skip: '["workflow_dispatch"]'
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
 
       - name: Install toolchain
