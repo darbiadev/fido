@@ -1,14 +1,14 @@
-use clap::{crate_authors, crate_version, App, AppSettings, Arg, ArgMatches};
+use clap::{crate_authors, crate_version, Arg, ArgMatches, Command};
 use clap_complete::{generate, Generator, Shell};
 
-pub(crate) fn build_cli() -> App<'static> {
-    App::new("fido")
+pub(crate) fn build_cli() -> Command<'static> {
+    Command::new("fido")
         .about("FIDO CLI")
         .version(crate_version!())
         .author(crate_authors!("\n"))
-        .global_setting(AppSettings::InferLongArgs)
-        .global_setting(AppSettings::InferSubcommands)
-        .setting(AppSettings::SubcommandRequiredElseHelp)
+        .infer_long_args(true)
+        .infer_subcommands(true)
+        .arg_required_else_help(true)
         .arg(
             Arg::new("verbose")
                 .short('v')
@@ -32,7 +32,7 @@ pub(crate) fn build_cli() -> App<'static> {
                 .takes_value(true),
         )
         .subcommand(
-            App::new("completions")
+            Command::new("completions")
                 .about("Generate completions")
                 .long_about("Generate completions for FIDO")
                 .arg(
@@ -43,29 +43,31 @@ pub(crate) fn build_cli() -> App<'static> {
                 ),
         )
         .subcommand(
-            App::new("business-central")
+            Command::new("business-central")
                 .about("Interact with Business Central")
                 .subcommand(
-                    App::new("orders").about("Interact with orders").subcommand(
-                        App::new("get")
-                            .about("Get order")
-                            .long_about("Get an order from Business Central")
-                            .arg(
-                                Arg::new("order-number")
-                                    .help("Order number")
-                                    .takes_value(true),
-                            ),
-                    ),
+                    Command::new("orders")
+                        .about("Interact with orders")
+                        .subcommand(
+                            Command::new("get")
+                                .about("Get order")
+                                .long_about("Get an order from Business Central")
+                                .arg(
+                                    Arg::new("order-number")
+                                        .help("Order number")
+                                        .takes_value(true),
+                                ),
+                        ),
                 ),
         )
         .subcommand(
-            App::new("zendesk")
+            Command::new("zendesk")
                 .about("Interact with Zendesk")
                 .subcommand(
-                    App::new("tickets")
+                    Command::new("tickets")
                         .about("Interact with tickets")
                         .subcommand(
-                            App::new("get")
+                            Command::new("get")
                                 .about("Get ticket")
                                 .long_about("Get a ticket from Zendesk")
                                 .arg(
@@ -78,7 +80,7 @@ pub(crate) fn build_cli() -> App<'static> {
         )
 }
 
-fn print_completions<G: Generator>(gen: G, app: &mut App) {
+fn print_completions<G: Generator>(gen: G, app: &mut Command) {
     generate(gen, app, app.get_name().to_string(), &mut std::io::stdout());
 }
 
