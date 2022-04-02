@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["process_matches",""]],"struct":[["Config",""]]});
+initSidebarItems({"fn":[["build_command",""],["process_matches",""]],"struct":[["Config",""]]});

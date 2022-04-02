@@ -36,7 +36,26 @@
 <span id="34">34</span>
 <span id="35">35</span>
 <span id="36">36</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">clap::ArgMatches</span>;
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">clap</span>::{<span class="ident">Arg</span>, <span class="ident">ArgMatches</span>, <span class="ident">Command</span>};
 <span class="kw">use</span> <span class="ident">figment::Figment</span>;
 <span class="kw">use</span> <span class="ident">futures::executor</span>;
 <span class="kw">use</span> <span class="ident">serde::Deserialize</span>;
@@ -47,6 +66,25 @@
     <span class="ident">email</span>: <span class="ident">String</span>,
     <span class="ident">api_token</span>: <span class="ident">String</span>,
     <span class="ident">oauth_client_id</span>: <span class="ident">String</span>,
+}
+
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">build_command</span>() -&gt; <span class="ident">Command</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
+    <span class="ident">Command::new</span>(<span class="string">&quot;zendesk&quot;</span>)
+        .<span class="ident">about</span>(<span class="string">&quot;Interact with Zendesk&quot;</span>)
+        .<span class="ident">subcommand</span>(
+            <span class="ident">Command::new</span>(<span class="string">&quot;tickets&quot;</span>)
+                .<span class="ident">about</span>(<span class="string">&quot;Interact with tickets&quot;</span>)
+                .<span class="ident">subcommand</span>(
+                    <span class="ident">Command::new</span>(<span class="string">&quot;get&quot;</span>)
+                        .<span class="ident">about</span>(<span class="string">&quot;Get ticket&quot;</span>)
+                        .<span class="ident">long_about</span>(<span class="string">&quot;Get a ticket from Zendesk&quot;</span>)
+                        .<span class="ident">arg</span>(
+                            <span class="ident">Arg::new</span>(<span class="string">&quot;ticket-number&quot;</span>)
+                                .<span class="ident">help</span>(<span class="string">&quot;Ticket number&quot;</span>)
+                                .<span class="ident">takes_value</span>(<span class="bool-val">true</span>),
+                        ),
+                ),
+        )
 }
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">process_matches</span>(<span class="ident">config_builder</span>: <span class="ident">Figment</span>, <span class="ident">matches</span>: <span class="kw-2">&amp;</span><span class="ident">ArgMatches</span>) {
