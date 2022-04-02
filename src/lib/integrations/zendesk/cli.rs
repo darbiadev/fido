@@ -1,4 +1,4 @@
-use clap::ArgMatches;
+use clap::{Arg, ArgMatches, Command};
 use figment::Figment;
 use futures::executor;
 use serde::Deserialize;
@@ -9,6 +9,25 @@ struct Config {
     email: String,
     api_token: String,
     oauth_client_id: String,
+}
+
+pub(crate) fn build_command() -> Command<'static> {
+    Command::new("zendesk")
+        .about("Interact with Zendesk")
+        .subcommand(
+            Command::new("tickets")
+                .about("Interact with tickets")
+                .subcommand(
+                    Command::new("get")
+                        .about("Get ticket")
+                        .long_about("Get a ticket from Zendesk")
+                        .arg(
+                            Arg::new("ticket-number")
+                                .help("Ticket number")
+                                .takes_value(true),
+                        ),
+                ),
+        )
 }
 
 pub(crate) fn process_matches(config_builder: Figment, matches: &ArgMatches) {

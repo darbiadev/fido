@@ -60,24 +60,7 @@ pub(crate) fn build_cli() -> Command<'static> {
                         ),
                 ),
         )
-        .subcommand(
-            Command::new("zendesk")
-                .about("Interact with Zendesk")
-                .subcommand(
-                    Command::new("tickets")
-                        .about("Interact with tickets")
-                        .subcommand(
-                            Command::new("get")
-                                .about("Get ticket")
-                                .long_about("Get a ticket from Zendesk")
-                                .arg(
-                                    Arg::new("ticket-number")
-                                        .help("Ticket number")
-                                        .takes_value(true),
-                                ),
-                        ),
-                ),
-        )
+        .subcommand(crate::lib::integrations::zendesk::cli::build_command())
 }
 
 fn print_completions<G: Generator>(gen: G, app: &mut Command) {
