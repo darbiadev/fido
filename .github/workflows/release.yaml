@@ -164,7 +164,7 @@ jobs:
       - uses: actions/setup-python@v3
 
       - name: Get release version
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: release-version
           path: release-version
@@ -233,7 +233,7 @@ jobs:
           fetch-depth: 1
 
       - name: Get release version
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: release-version
           path: release-version
@@ -303,7 +303,7 @@ jobs:
     needs: [ build-deb, build-msi ]
     steps:
       - name: Get release version
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: release-version
           path: release-version
@@ -319,7 +319,7 @@ jobs:
           echo "Release version: ${{ env.RELEASE_VERSION }}"
 
       - name: Get release artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: release
           path: release
