@@ -15,7 +15,7 @@ struct Config {
 
 pub(crate) fn process_matches(config_builder: Figment, matches: &ArgMatches) {
     let config: Config = config_builder.select("business_central").extract().unwrap();
-    let client = business_central::Client::new(
+    let client = business_central::BusinessCentralServices::new(
         config.base_url,
         config.tenant_id,
         config.environment,
