@@ -42,24 +42,7 @@ pub(crate) fn build_cli() -> Command<'static> {
                         .possible_values(Shell::possible_values()),
                 ),
         )
-        .subcommand(
-            Command::new("business-central")
-                .about("Interact with Business Central")
-                .subcommand(
-                    Command::new("orders")
-                        .about("Interact with orders")
-                        .subcommand(
-                            Command::new("get")
-                                .about("Get order")
-                                .long_about("Get an order from Business Central")
-                                .arg(
-                                    Arg::new("order-number")
-                                        .help("Order number")
-                                        .takes_value(true),
-                                ),
-                        ),
-                ),
-        )
+        .subcommand(crate::lib::integrations::business_central::cli::build_command())
         .subcommand(crate::lib::integrations::zendesk::cli::build_command())
 }
 
