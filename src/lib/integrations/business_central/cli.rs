@@ -1,7 +1,26 @@
-use clap::ArgMatches;
+use clap::{Arg, ArgMatches, Command};
 use figment::Figment;
 use futures::executor;
 use serde::Deserialize;
+
+pub(crate) fn build_command() -> Command<'static> {
+    Command::new("business-central")
+        .about("Interact with Business Central")
+        .subcommand(
+            Command::new("orders")
+                .about("Interact with orders")
+                .subcommand(
+                    Command::new("get")
+                        .about("Get order")
+                        .long_about("Get an order from Business Central")
+                        .arg(
+                            Arg::new("order-number")
+                                .help("Order number")
+                                .takes_value(true),
+                        ),
+                ),
+        )
+}
 
 #[derive(Debug, Deserialize)]
 struct Config {
