@@ -161,7 +161,7 @@ jobs:
         with:
           fetch-depth: 1
 
-      - uses: actions/setup-python@v3
+      - uses: actions/setup-python@v4
 
       - name: Get release version
         uses: actions/download-artifact@v3
