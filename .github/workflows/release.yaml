@@ -161,7 +161,7 @@ jobs:
         with:
           fetch-depth: 1
 
-      - uses: actions/setup-python@v3
+      - uses: actions/setup-python@v4
 
       - name: Get release version
         uses: actions/download-artifact@v3
@@ -184,7 +184,7 @@ jobs:
         run: Install-WindowsFeature Net-Framework-Core
 
       - name: Install wixtoolset (Windows x86-64 MSVC)
-        uses: crazy-max/ghaction-chocolatey@v1
+        uses: crazy-max/ghaction-chocolatey@v2
         with:
           args: install -y wixtoolset
 
