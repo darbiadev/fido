@@ -1,4 +1,4 @@
-use clap::{crate_authors, crate_version, Arg, ArgMatches, Command};
+use clap::{crate_authors, crate_version, value_parser, Arg, ArgMatches, Command};
 use clap_complete::{generate, Generator, Shell};
 
 pub(crate) fn build_cli() -> Command<'static> {
@@ -39,7 +39,7 @@ pub(crate) fn build_cli() -> Command<'static> {
                     Arg::new("shell")
                         .long("shell")
                         .help("The shell to generate completions for")
-                        .possible_values(Shell::possible_values()),
+                        .value_parser(value_parser!(Shell)),
                 ),
         )
         .subcommand(crate::lib::integrations::business_central::cli::build_command())
