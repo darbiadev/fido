@@ -79,7 +79,7 @@
 <span id="74">74</span>
 <span id="75">75</span>
 <span id="76">76</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">clap</span>::{<span class="ident">crate_authors</span>, <span class="ident">crate_version</span>, <span class="ident">Arg</span>, <span class="ident">ArgMatches</span>, <span class="ident">Command</span>};
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">clap</span>::{<span class="ident">crate_authors</span>, <span class="ident">crate_version</span>, <span class="ident">value_parser</span>, <span class="ident">Arg</span>, <span class="ident">ArgMatches</span>, <span class="ident">Command</span>};
 <span class="kw">use</span> <span class="ident">clap_complete</span>::{<span class="ident">generate</span>, <span class="ident">Generator</span>, <span class="ident">Shell</span>};
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">build_cli</span>() -&gt; <span class="ident">Command</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
@@ -120,7 +120,7 @@
                     <span class="ident">Arg::new</span>(<span class="string">&quot;shell&quot;</span>)
                         .<span class="ident">long</span>(<span class="string">&quot;shell&quot;</span>)
                         .<span class="ident">help</span>(<span class="string">&quot;The shell to generate completions for&quot;</span>)
-                        .<span class="ident">possible_values</span>(<span class="ident">Shell::possible_values</span>()),
+                        .<span class="ident">value_parser</span>(<span class="macro">value_parser!</span>(<span class="ident">Shell</span>)),
                 ),
         )
         .<span class="ident">subcommand</span>(<span class="ident"><span class="kw">crate</span>::lib::integrations::business_central::cli::build_command</span>())
