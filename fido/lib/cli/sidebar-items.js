@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["build_cli",""],["print_completions",""],["process_matches",""]]});
+initSidebarItems({"fn":[["build_cli",""],["print_completions",""],["process_matches",""]],"struct":[["Context",""]]});
