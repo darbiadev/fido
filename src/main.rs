@@ -5,7 +5,7 @@ use figment::{
     Figment,
 };
 
-use crate::lib::cli::{build_cli, process_matches};
+use crate::lib::cli::{build_cli, process_matches, Context};
 
 mod lib;
 
@@ -44,7 +44,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .with_max_level(log_level)
         .init();
 
-    process_matches(config_builder, matches);
+    let context = Context::new(matches.is_present("quiet"));
+
+    process_matches(context, config_builder, matches);
 
     Ok(())
 }
