@@ -3,6 +3,8 @@ use figment::Figment;
 use futures::executor;
 use serde::Deserialize;
 
+use crate::Context;
+
 #[derive(Debug, Deserialize)]
 struct Config {
     base_url: String,
@@ -30,7 +32,7 @@ pub(crate) fn build_command() -> Command<'static> {
         )
 }
 
-pub(crate) fn process_matches(config_builder: Figment, matches: &ArgMatches) {
+pub(crate) fn process_matches(context: Context, config_builder: Figment, matches: &ArgMatches) {
     let config: Config = config_builder.select("zendesk").extract().unwrap();
     let mut client = zendesk::Client::new(
         config.base_url,
@@ -48,7 +50,9 @@ pub(crate) fn process_matches(config_builder: Figment, matches: &ArgMatches) {
                     ticket_number,
                 ))
                 .unwrap();
-                tracing::error!("{:#?}", ticket)
+                if !context.quiet {
+                    println!("{:#?}", ticket)
+                }
             }
         }
     }
