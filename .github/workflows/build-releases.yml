@@ -16,7 +16,6 @@ jobs:
   build-binaries:
     name: "Build binaries"
     runs-on: ${{ matrix.info.os }}
-    container: ${{ matrix.info.container }}
     env:
       RUST_BACKTRACE: 1
       BTM_GENERATE: true
@@ -24,88 +23,33 @@ jobs:
       fail-fast: false
       matrix:
         info:
-          # ======= Supported targets =======
-          # Linux (x64, x86, aarch64)
+          # Linux (x64)
           - {
             os: "ubuntu-18.04",
             target: "x86_64-unknown-linux-gnu",
-            cross: false,
-          }
-          - {
-            os: "ubuntu-18.04",
-            target: "x86_64-unknown-linux-gnu",
-            cross: false,
-            container: quay.io/pypa/manylinux2014_x86_64,
-            suffix: "2-17",
-          }
-          - {
-            os: "ubuntu-18.04",
-            target: "i686-unknown-linux-gnu",
-            cross: true,
-          }
-          - {
-            os: "ubuntu-18.04",
-            target: "x86_64-unknown-linux-musl",
-            cross: false,
-          }
-          - {
-            os: "ubuntu-18.04",
-            target: "i686-unknown-linux-musl",
-            cross: true,
-          }
-          - {
-            os: "ubuntu-18.04",
-            target: "aarch64-unknown-linux-gnu",
-            cross: true,
-          }
-          - {
-            os: "ubuntu-18.04",
-            target: "aarch64-unknown-linux-musl",
-            cross: true,
           }
 
           # macOS (x64)
-          - { os: "macOS-latest", target: "x86_64-apple-darwin", cross: false }
+          - {
+            os: "macOS-latest",
+            target: "x86_64-apple-darwin",
+          }
 
           # Windows (x64, x86)
           - {
             os: "windows-2019",
             target: "x86_64-pc-windows-msvc",
-            cross: false,
           }
-          - { os: "windows-2019", target: "i686-pc-windows-msvc", cross: false }
+          - {
+            os: "windows-2019",
+            target: "i686-pc-windows-msvc",
+            cross: false
+          }
           - {
             os: "windows-2019",
             target: "x86_64-pc-windows-gnu",
-            cross: false,
           }
 
-          # ======= Unsupported targets =======
-          # armv7
-          - {
-            os: "ubuntu-18.04",
-            target: "armv7-unknown-linux-gnueabihf",
-            cross: true,
-          }
-          - {
-            os: "ubuntu-18.04",
-            target: "armv7-unknown-linux-musleabihf",
-            cross: true,
-          }
-
-          # PowerPC 64 LE
-          - {
-            os: "ubuntu-18.04",
-            target: "powerpc64le-unknown-linux-gnu",
-            cross: true,
-          }
-
-          # Risc-V 64gc
-          - {
-            os: "ubuntu-18.04",
-            target: "riscv64gc-unknown-linux-gnu",
-            cross: true,
-          }
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -113,36 +57,22 @@ jobs:
           fetch-depth: 1
 
       - name: Set up Rust toolchain
-        if: matrix.info.container == ''
-        uses: dtolnay/rust-toolchain@88e7c2e1da2693cf72d58fce9416206818e61dea # https://github.com/dtolnay/rust-toolchain/commit/88e7c2e1da2693cf72d58fce9416206818e61dea
-        with:
-          toolchain: stable
-          target: ${{ matrix.info.target }}
-
-      - name: Set up Rust toolchain (non-GitHub container)
-        if: matrix.info.container != ''
-        uses: actions-rs/toolchain@88dc2356392166efad76775c878094f4e83ff746 # https://github.com/actions-rs/toolchain/commit/88dc2356392166efad76775c878094f4e83ff746
+        uses: actions-rs/toolchain@88dc2356392166efad76775c878094f4e83ff746
         with:
           profile: minimal
           toolchain: stable
           target: ${{ matrix.info.target }}
 
       - name: Enable Rust cache
-        uses: Swatinem/rust-cache@cb2cf0cc7c5198d3364b9630e2c3d457f160790c # 1.4.0
+        uses: Swatinem/rust-cache@cb2cf0cc7c5198d3364b9630e2c3d457f160790c
         with:
           key: ${{ matrix.info.target }}
-
-      - name: Install cross if needed
-        if: matrix.info.cross == true
-        run: |
-          cargo install cross --locked --version=0.2.1
 
       - name: Build
         uses: actions-rs/cargo@v1
         with:
           command: build
           args: --release --verbose --locked --target=${{ matrix.info.target }}
-          use-cross: ${{ matrix.info.cross }}
 
       - name: Generate completions
         shell: bash
@@ -177,14 +107,14 @@ jobs:
           mv ${{ env.ASSET }} release/
 
       - name: Compress completion files (Linux x86-64 GNU)
-        if: matrix.info.target == 'x86_64-unknown-linux-gnu' && matrix.info.container == ''
+        if: matrix.info.target == 'x86_64-unknown-linux-gnu'
         shell: bash
         run: |
           tar -C ./completion -czvf completion.tar.gz .
           mv completion.tar.gz release/
 
       #      - name: Compress manpage files (Linux x86-64 GNU)
-      #        if: matrix.info.target == 'x86_64-unknown-linux-gnu' && matrix.info.container == ''
+      #        if: matrix.info.target == 'x86_64-unknown-linux-gnu'
       #        shell: bash
       #        run: |
       #          gzip ./manpage/fido.1
