@@ -46,18 +46,19 @@ pub(crate) fn build_cli() -> Command<'static> {
                 .about("Generate completions")
                 .long_about("Generate completions for FIDO")
                 .arg(
-                    Arg::new("shell")
-                        .long("shell")
+                    Arg::new("generator")
+                        .long("generate")
                         .help("The shell to generate completions for")
-                        .value_parser(value_parser!(Shell)),
+                        .value_parser(value_parser!(Shell))
+                        .takes_value(true),
                 ),
         )
         .subcommand(crate::lib::integrations::business_central::cli::build_command())
         .subcommand(crate::lib::integrations::zendesk::cli::build_command())
 }
 
-fn print_completions<G: Generator>(gen: G, app: &mut Command) {
-    generate(gen, app, app.get_name().to_string(), &mut std::io::stdout());
+fn print_completions<G: Generator>(gen: G, cmd: &mut Command) {
+    generate(gen, cmd, cmd.get_name().to_string(), &mut std::io::stdout());
 }
 
 pub(crate) fn process_matches(
@@ -66,9 +67,9 @@ pub(crate) fn process_matches(
     matches: ArgMatches,
 ) {
     if let Some(matches) = matches.subcommand_matches("completions") {
-        if let Ok(shell) = matches.value_of_t::<Shell>("shell") {
-            let mut app = build_cli();
-            print_completions(shell, &mut app);
+        if let Some(generator) = matches.get_one::<Shell>("generator") {
+            let mut cmd = build_cli();
+            print_completions(*generator, &mut cmd);
         }
     } else if let Some(matches) = matches.subcommand_matches("business-central") {
         crate::lib::integrations::business_central::cli::process_matches(
