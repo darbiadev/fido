@@ -148,10 +148,10 @@ jobs:
         shell: bash
         run: |
           mkdir completion
-          ./target/${{ matrix.info.target }}/release/fido completions --shell bash > completion/fido.bash
-          ./target/${{ matrix.info.target }}/release/fido completions --shell zsh > completion/_fido
-          ./target/${{ matrix.info.target }}/release/fido completions --shell fish > completion/fido.fish
-          ./target/${{ matrix.info.target }}/release/fido completions --shell powershell > completion/_fido.ps1
+          ./target/${{ matrix.info.target }}/release/fido completions --generate bash > completion/fido.bash
+          ./target/${{ matrix.info.target }}/release/fido completions --generate zsh > completion/_fido
+          ./target/${{ matrix.info.target }}/release/fido completions --generate fish > completion/fido.fish
+          ./target/${{ matrix.info.target }}/release/fido completions --generate powershell > completion/_fido.ps1
 
       - name: Bundle release and completion (Windows)
         if: matrix.info.os == 'windows-2019'
