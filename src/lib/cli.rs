@@ -1,6 +1,16 @@
 use clap::{crate_authors, crate_version, value_parser, Arg, ArgMatches, Command};
 use clap_complete::{generate, Generator, Shell};
 
+pub(crate) struct Context {
+    pub(crate) quiet: bool,
+}
+
+impl Context {
+    pub fn new(quiet: bool) -> Context {
+        Context { quiet }
+    }
+}
+
 pub(crate) fn build_cli() -> Command<'static> {
     Command::new("fido")
         .about("FIDO CLI")
@@ -50,16 +60,24 @@ fn print_completions<G: Generator>(gen: G, app: &mut Command) {
     generate(gen, app, app.get_name().to_string(), &mut std::io::stdout());
 }
 
-pub(crate) fn process_matches(config_builder: figment::Figment, matches: ArgMatches) {
+pub(crate) fn process_matches(
+    context: Context,
+    config_builder: figment::Figment,
+    matches: ArgMatches,
+) {
     if let Some(matches) = matches.subcommand_matches("completions") {
         if let Ok(shell) = matches.value_of_t::<Shell>("shell") {
             let mut app = build_cli();
             print_completions(shell, &mut app);
         }
     } else if let Some(matches) = matches.subcommand_matches("business-central") {
-        crate::lib::integrations::business_central::cli::process_matches(config_builder, matches)
+        crate::lib::integrations::business_central::cli::process_matches(
+            context,
+            config_builder,
+            matches,
+        )
     } else if let Some(matches) = matches.subcommand_matches("zendesk") {
-        crate::lib::integrations::zendesk::cli::process_matches(config_builder, matches)
+        crate::lib::integrations::zendesk::cli::process_matches(context, config_builder, matches)
     }
 }
 

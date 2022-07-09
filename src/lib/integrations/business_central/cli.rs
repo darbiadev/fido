@@ -4,6 +4,8 @@ use figment::Figment;
 use futures::executor;
 use serde::Deserialize;
 
+use crate::Context;
+
 pub(crate) fn build_command() -> Command<'static> {
     Command::new("business-central")
         .about("Interact with Business Central")
@@ -64,7 +66,7 @@ struct Config {
     web_service_access_key: String,
 }
 
-pub(crate) fn process_matches(config_builder: Figment, matches: &ArgMatches) {
+pub(crate) fn process_matches(context: Context, config_builder: Figment, matches: &ArgMatches) {
     let config: Config = config_builder.select("business_central").extract().unwrap();
     let client = business_central::BusinessCentralServices::new(
         config.base_url,
@@ -97,7 +99,9 @@ pub(crate) fn process_matches(config_builder: Figment, matches: &ArgMatches) {
                     ),
                 )
                 .unwrap();
-                tracing::error!("{:#?}", sales_order)
+                if !context.quiet {
+                    println!("{:#?}", sales_order)
+                }
             }
         } else if let Some(_matches) = matches.subcommand_matches("unbound") {
             tracing::error!("{}", "unimplemented!");
@@ -112,7 +116,9 @@ pub(crate) fn process_matches(config_builder: Figment, matches: &ArgMatches) {
                     ),
                 )
                 .unwrap();
-                tracing::error!("{:#?}", sales_order)
+                if !context.quiet {
+                    println!("{:#?}", sales_order)
+                }
             }
         }
     }
