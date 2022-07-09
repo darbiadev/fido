@@ -14,6 +14,10 @@ on:
     tags:
       - "[0-9]+.[0-9]+.[0-9]+"
 
+env:
+  CARGO_INCREMENTAL: 0
+  CARGO_PROFILE_DEV_DEBUG: 0
+
 jobs:
   initialize-release-job:
     name: initialize-release-job
@@ -44,263 +48,12 @@ jobs:
           path: release-version
 
   build-release:
-    name: build-release
     needs: [ initialize-release-job ]
-    runs-on: ${{ matrix.triple.os }}
-    container: ${{ matrix.triple.container }}
-    env:
-      RUST_BACKTRACE: 1
-    strategy:
-      fail-fast: false
-      matrix:
-        triple:
-          - {
-            os: "ubuntu-latest",
-            target: "x86_64-unknown-linux-gnu",
-            cross: false,
-            rust: stable,
-          }
-          - {
-            os: "macOS-latest",
-            target: "x86_64-apple-darwin",
-            cross: false,
-            rust: stable,
-          }
-          - {
-            os: "windows-latest",
-            target: "x86_64-pc-windows-msvc",
-            cross: false,
-            rust: stable,
-          }
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 1
-
-      - name: Install toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
-          target: ${{ matrix.triple.target }}
-
-      - uses: Swatinem/rust-cache@v1
-        with:
-          key: ${{ matrix.triple.target }}
-
-      - name: Build
-        uses: actions-rs/cargo@v1
-        with:
-          command: build
-          args: --release --verbose --target=${{ matrix.triple.target }}
-          use-cross: ${{ matrix.triple.cross }}
-
-      - name: Generate completions
-        shell: bash
-        run: |
-          mkdir completion
-          ./target/${{ matrix.triple.target }}/release/fido completions --shell bash > completion/fido.bash
-          ./target/${{ matrix.triple.target }}/release/fido completions --shell zsh > completion/_fido
-          ./target/${{ matrix.triple.target }}/release/fido completions --shell fish > completion/fido.fish
-          ./target/${{ matrix.triple.target }}/release/fido completions --shell powershell > completion/_fido.ps1
-
-      - name: Strip release binary (macOS or Linux x86-64)
-        if: matrix.triple.strip == true
-        run: |
-          strip target/${{ matrix.triple.target }}/release/fido
-
-      - name: Bundle release and completion (Windows)
-        if: matrix.triple.os == 'windows-latest'
-        shell: bash
-        run: |
-          cp target/${{ matrix.triple.target }}/release/fido.exe fido.exe
-          7z a fido_${{ matrix.triple.target }}.zip "fido.exe"
-          7z a fido_${{ matrix.triple.target }}.zip "completion"
-          echo "ASSET=fido_${{ matrix.triple.target }}.zip" >> $GITHUB_ENV
-
-      - name: Bundle release and completion (Linux and macOS)
-        if: matrix.triple.os != 'windows-latest'
-        shell: bash
-        run: |
-          cp target/${{ matrix.triple.target }}/release/fido ./fido
-          tar -czvf fido_${{ matrix.triple.target }}${{ matrix.triple.suffix }}.tar.gz fido completion
-          echo "ASSET=fido_${{ matrix.triple.target }}${{ matrix.triple.suffix }}.tar.gz" >> $GITHUB_ENV
-
-      - name: Create release directory for artifact, move file
-        shell: bash
-        run: |
-          mkdir release
-          mv ${{ env.ASSET }} release/
-
-      - name: Compress completion files (Linux x86-64 GNU)
-        if: matrix.triple.target == 'x86_64-unknown-linux-gnu' && matrix.triple.container == ''
-        shell: bash
-        run: |
-          tar -C ./completion -czvf completion.tar.gz .
-          mv completion.tar.gz release/
-
-      - name: Save release as artifact
-        uses: actions/upload-artifact@v3
-        with:
-          retention-days: 3
-          name: release
-          path: release
-
-  build-msi:
-    name: build-msi
-    needs: [ initialize-release-job ]
-    runs-on: "windows-latest"
-    env:
-      RUST_BACKTRACE: 1
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 1
-
-      - uses: actions/setup-python@v4
-
-      - name: Get release version
-        uses: actions/download-artifact@v3
-        with:
-          name: release-version
-          path: release-version
-
-      - name: Set release version
-        shell: bash
-        run: |
-          release_version="$(cat ./release-version/release-version)"
-          echo "RELEASE_VERSION=$release_version" >> $GITHUB_ENV
-
-      - name: Validate release version
-        run: |
-          echo "Release version: ${{ env.RELEASE_VERSION }}"
-
-      - name: Install Net-Framework-Core (Windows x86-64 MSVC)
-        shell: powershell
-        run: Install-WindowsFeature Net-Framework-Core
-
-      - name: Install wixtoolset (Windows x86-64 MSVC)
-        uses: crazy-max/ghaction-chocolatey@v2
-        with:
-          args: install -y wixtoolset
-
-      - name: Install toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
-          target: x86_64-pc-windows-msvc
-
-      - uses: Swatinem/rust-cache@v1
-        with:
-          key: x86_64-pc-windows-msvc-msi
-
-      - name: Build msi file
-        shell: powershell
-        run: |
-          cargo install cargo-wix
-          cargo wix init
-          cargo wix
-
-      - name: Create release directory for artifact, move files
-        shell: bash
-        run: |
-          mkdir release
-          mv target/wix/fido-${{ env.RELEASE_VERSION }}-x86_64.msi release/
-
-      - name: Save release as artifact
-        uses: actions/upload-artifact@v3
-        with:
-          retention-days: 3
-          name: release
-          path: release
-
-  build-deb:
-    name: build-deb
-    needs: [ initialize-release-job ]
-    runs-on: "ubuntu-latest"
-    env:
-      RUST_BACKTRACE: 1
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 1
-
-      - name: Get release version
-        uses: actions/download-artifact@v3
-        with:
-          name: release-version
-          path: release-version
-
-      - name: Set release version
-        shell: bash
-        run: |
-          release_version="$(cat ./release-version/release-version)"
-          echo "RELEASE_VERSION=$release_version" >> $GITHUB_ENV
-
-      - name: Validate release version
-        run: |
-          echo "Release version: ${{ env.RELEASE_VERSION }}"
-
-      - name: Install toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
-          target: x86_64-unknown-linux-gnu
-
-      - uses: Swatinem/rust-cache@v1
-        with:
-          key: x86_64-unknown-linux-gnu-deb
-
-      - name: Build
-        uses: actions-rs/cargo@v1
-        with:
-          command: build
-          args: --release --verbose
-
-      - name: Generate completions
-        shell: bash
-        run: |
-          mkdir completion
-          ./target/release/fido completions --shell bash > completion/fido.bash
-          ./target/release/fido completions --shell zsh > completion/_fido
-          ./target/release/fido completions --shell fish > completion/fido.fish
-          ./target/release/fido completions --shell powershell > completion/_fido.ps1
-
-      - name: Build Debian release
-        run: |
-          cargo install cargo-deb --version 1.34.0 --locked
-          cargo deb --no-build
-          cp ./target/debian/fido_*.deb ./fido_${{ env.RELEASE_VERSION }}_amd64.deb
-
-      - name: Test Debian release
-        run: sudo dpkg -i ./fido_${{ env.RELEASE_VERSION }}_amd64.deb
-
-      - name: Create release directory for artifact, move file
-        shell: bash
-        run: |
-          mkdir release
-          mv fido_${{ env.RELEASE_VERSION }}_amd64.deb release/
-
-      - name: Save release as artifact
-        uses: actions/upload-artifact@v3
-        with:
-          retention-days: 3
-          name: release
-          path: release
+    uses: ./.github/workflows/build_releases.yml
 
   upload-release:
     name: upload-release
     runs-on: ubuntu-latest
-    needs: [ build-deb, build-msi ]
     steps:
       - name: Get release version
         uses: actions/download-artifact@v3
@@ -327,8 +80,7 @@ jobs:
       - name: Print out all release files
         run: |
           echo "Generated $(ls ./release | wc -l) files:"
-          ls ./release
-
+          du -h -d 0 ./release/*
       - name: Upload all saved release files
         uses: softprops/action-gh-release@v1
         with:
@@ -340,15 +92,10 @@ jobs:
           name: ${{ env.RELEASE_VERSION }} Release
           body: |
             <!-- Write summary here -->
-
             ---
-
             ## Features
-
             ## Changes
-
             ## Bug Fixes
-
             ## Internal Changes
           files: |
             ./release/*
