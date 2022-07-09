@@ -141,7 +141,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: build
-          args: --release --verbose --locked --target=${{ matrix.info.target }} --features deploy
+          args: --release --verbose --locked --target=${{ matrix.info.target }}
           use-cross: ${{ matrix.info.cross }}
 
       - name: Bundle release and completion (Windows)
