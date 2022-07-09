@@ -97,6 +97,7 @@
 <span id="92">92</span>
 <span id="93">93</span>
 <span id="94">94</span>
+<span id="95">95</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">clap</span>::{<span class="ident">crate_authors</span>, <span class="ident">crate_version</span>, <span class="ident">value_parser</span>, <span class="ident">Arg</span>, <span class="ident">ArgMatches</span>, <span class="ident">Command</span>};
 <span class="kw">use</span> <span class="ident">clap_complete</span>::{<span class="ident">generate</span>, <span class="ident">Generator</span>, <span class="ident">Shell</span>};
 
@@ -145,18 +146,19 @@
                 .<span class="ident">about</span>(<span class="string">&quot;Generate completions&quot;</span>)
                 .<span class="ident">long_about</span>(<span class="string">&quot;Generate completions for FIDO&quot;</span>)
                 .<span class="ident">arg</span>(
-                    <span class="ident">Arg::new</span>(<span class="string">&quot;shell&quot;</span>)
-                        .<span class="ident">long</span>(<span class="string">&quot;shell&quot;</span>)
+                    <span class="ident">Arg::new</span>(<span class="string">&quot;generator&quot;</span>)
+                        .<span class="ident">long</span>(<span class="string">&quot;generate&quot;</span>)
                         .<span class="ident">help</span>(<span class="string">&quot;The shell to generate completions for&quot;</span>)
-                        .<span class="ident">value_parser</span>(<span class="macro">value_parser!</span>(<span class="ident">Shell</span>)),
+                        .<span class="ident">value_parser</span>(<span class="macro">value_parser!</span>(<span class="ident">Shell</span>))
+                        .<span class="ident">takes_value</span>(<span class="bool-val">true</span>),
                 ),
         )
         .<span class="ident">subcommand</span>(<span class="ident"><span class="kw">crate</span>::lib::integrations::business_central::cli::build_command</span>())
         .<span class="ident">subcommand</span>(<span class="ident"><span class="kw">crate</span>::lib::integrations::zendesk::cli::build_command</span>())
 }
 
-<span class="kw">fn</span> <span class="ident">print_completions</span><span class="op">&lt;</span><span class="ident">G</span>: <span class="ident">Generator</span><span class="op">&gt;</span>(<span class="ident">gen</span>: <span class="ident">G</span>, <span class="ident">app</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Command</span>) {
-    <span class="ident">generate</span>(<span class="ident">gen</span>, <span class="ident">app</span>, <span class="ident">app</span>.<span class="ident">get_name</span>().<span class="ident">to_string</span>(), <span class="kw-2">&amp;mut</span> <span class="ident">std::io::stdout</span>());
+<span class="kw">fn</span> <span class="ident">print_completions</span><span class="op">&lt;</span><span class="ident">G</span>: <span class="ident">Generator</span><span class="op">&gt;</span>(<span class="ident">gen</span>: <span class="ident">G</span>, <span class="ident">cmd</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Command</span>) {
+    <span class="ident">generate</span>(<span class="ident">gen</span>, <span class="ident">cmd</span>, <span class="ident">cmd</span>.<span class="ident">get_name</span>().<span class="ident">to_string</span>(), <span class="kw-2">&amp;mut</span> <span class="ident">std::io::stdout</span>());
 }
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">process_matches</span>(
@@ -165,9 +167,9 @@
     <span class="ident">matches</span>: <span class="ident">ArgMatches</span>,
 ) {
     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">matches</span>) <span class="op">=</span> <span class="ident">matches</span>.<span class="ident">subcommand_matches</span>(<span class="string">&quot;completions&quot;</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">shell</span>) <span class="op">=</span> <span class="ident">matches</span>.<span class="ident">value_of_t</span>::<span class="op">&lt;</span><span class="ident">Shell</span><span class="op">&gt;</span>(<span class="string">&quot;shell&quot;</span>) {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">app</span> <span class="op">=</span> <span class="ident">build_cli</span>();
-            <span class="ident">print_completions</span>(<span class="ident">shell</span>, <span class="kw-2">&amp;mut</span> <span class="ident">app</span>);
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">generator</span>) <span class="op">=</span> <span class="ident">matches</span>.<span class="ident">get_one</span>::<span class="op">&lt;</span><span class="ident">Shell</span><span class="op">&gt;</span>(<span class="string">&quot;generator&quot;</span>) {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cmd</span> <span class="op">=</span> <span class="ident">build_cli</span>();
+            <span class="ident">print_completions</span>(<span class="kw-2">*</span><span class="ident">generator</span>, <span class="kw-2">&amp;mut</span> <span class="ident">cmd</span>);
         }
     } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">matches</span>) <span class="op">=</span> <span class="ident">matches</span>.<span class="ident">subcommand_matches</span>(<span class="string">&quot;business-central&quot;</span>) {
         <span class="ident"><span class="kw">crate</span>::lib::integrations::business_central::cli::process_matches</span>(
