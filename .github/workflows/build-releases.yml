@@ -122,7 +122,7 @@ jobs:
       #          mv manpage.tar.gz release/
 
       - name: Save release as artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           retention-days: 3
           name: release
