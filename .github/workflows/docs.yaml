@@ -20,7 +20,7 @@ jobs:
         with:
           toolchain: stable
 
-      - uses: Swatinem/rust-cache@v1
+      - uses: Swatinem/rust-cache@6720f05bc48b77f96918929a9019fb2203ff71f8
         with:
           key: "v0-x86_64-unknown-linux-gnu"
 
