@@ -12,7 +12,7 @@ repository = "https://github.com/darbiadev/fido/"
 
 [dependencies]
 tokio = { version = "1.20.1", features = ["full"] }
-clap = { version = "3.2.15", features = ["cargo"] }
+clap = { version = "3.2.16", features = ["cargo"] }
 clap_complete = "3.2.3"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1"
