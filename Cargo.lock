@@ -58,7 +58,7 @@ checksum = "37ccbd214614c6783386c1af30caf03192f17891059cecc394b4fb119e363de3"
 [[package]]
 name = "business_central"
 version = "0.1.0"
-source = "git+https://github.com/darbiadev/business-central-rs#6f1fd7c78035f9bf25f7ecc9fcd38590332a0ae4"
+source = "git+https://github.com/darbiadev/business-central-rs#23d6f78224c3fddf29aacb431ccefc2688f4c79c"
 dependencies = [
  "reqwest",
  "serde",
