@@ -36,7 +36,7 @@ jobs:
       - uses: actions/checkout@v3
         if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
 
-      - uses: actions-rs/toolchain@v1
+      - uses: actions-rs/toolchain@16499b5e05bf2e26879000db0c1d13f7e13fa3af
         if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
         with:
           profile: minimal
@@ -71,7 +71,7 @@ jobs:
       - uses: actions/checkout@v3
         if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
 
-      - uses: actions-rs/toolchain@v1
+      - uses: actions-rs/toolchain@16499b5e05bf2e26879000db0c1d13f7e13fa3af
         if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
         with:
           profile: minimal
@@ -127,7 +127,7 @@ jobs:
 
       - name: Install toolchain
         if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
-        uses: actions-rs/toolchain@v1
+        uses: actions-rs/toolchain@16499b5e05bf2e26879000db0c1d13f7e13fa3af
         with:
           profile: minimal
           toolchain: ${{ matrix.triple.rust }}
@@ -189,7 +189,7 @@ jobs:
 
       - name: Install toolchain
         if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
-        uses: actions-rs/toolchain@v1
+        uses: actions-rs/toolchain@16499b5e05bf2e26879000db0c1d13f7e13fa3af
         with:
           profile: minimal
           toolchain: ${{ matrix.triple.rust }}
