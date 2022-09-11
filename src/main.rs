@@ -5,9 +5,10 @@ use figment::{
     Figment,
 };
 
-use crate::lib::cli::{build_cli, process_matches, Context};
+use crate::cli::{build_cli, process_matches, Context};
 
-mod lib;
+mod cli;
+mod integrations;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {

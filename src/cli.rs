@@ -53,8 +53,8 @@ pub(crate) fn build_cli() -> Command<'static> {
                         .takes_value(true),
                 ),
         )
-        .subcommand(crate::lib::integrations::business_central::cli::build_command())
-        .subcommand(crate::lib::integrations::zendesk::cli::build_command())
+        .subcommand(crate::integrations::business_central::cli::build_command())
+        .subcommand(crate::integrations::zendesk::cli::build_command())
 }
 
 fn print_completions<G: Generator>(gen: G, cmd: &mut Command) {
@@ -72,13 +72,13 @@ pub(crate) fn process_matches(
             print_completions(*generator, &mut cmd);
         }
     } else if let Some(matches) = matches.subcommand_matches("business-central") {
-        crate::lib::integrations::business_central::cli::process_matches(
+        crate::integrations::business_central::cli::process_matches(
             context,
             config_builder,
             matches,
         )
     } else if let Some(matches) = matches.subcommand_matches("zendesk") {
-        crate::lib::integrations::zendesk::cli::process_matches(context, config_builder, matches)
+        crate::integrations::zendesk::cli::process_matches(context, config_builder, matches)
     }
 }
 
