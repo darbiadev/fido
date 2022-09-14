@@ -47,5 +47,5 @@ async fn main() {
 
     let context = Context::new(matches.is_present("quiet"));
 
-    process_matches(context, config_builder, matches);
+    process_matches(context, config_builder, matches).await;
 }

@@ -61,7 +61,7 @@ fn print_completions<G: Generator>(gen: G, cmd: &mut Command) {
     generate(gen, cmd, cmd.get_name().to_string(), &mut std::io::stdout());
 }
 
-pub(crate) fn process_matches(
+pub(crate) async fn process_matches(
     context: Context,
     config_builder: figment::Figment,
     matches: ArgMatches,
@@ -78,7 +78,7 @@ pub(crate) fn process_matches(
             matches,
         )
     } else if let Some(matches) = matches.subcommand_matches("zendesk") {
-        crate::integrations::zendesk::cli::process_matches(context, config_builder, matches)
+        crate::integrations::zendesk::cli::process_matches(context, config_builder, matches).await
     }
 }
 
