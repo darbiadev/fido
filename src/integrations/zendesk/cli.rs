@@ -31,7 +31,11 @@ pub(crate) fn build_command() -> Command<'static> {
         )
 }
 
-pub(crate) async fn process_matches(context: Context, config_builder: Figment, matches: &ArgMatches) {
+pub(crate) async fn process_matches(
+    context: Context,
+    config_builder: Figment,
+    matches: &ArgMatches,
+) {
     let config: Config = config_builder.select("zendesk").extract().unwrap();
     let mut client = zendesk::Client::new(
         config.base_url,
@@ -44,11 +48,10 @@ pub(crate) async fn process_matches(context: Context, config_builder: Figment, m
         if let Some(matches) = matches.subcommand_matches("get") {
             if let Some(ticket_number) = matches.value_of("ticket-number") {
                 client.update_token().await;
-                let ticket = zendesk::resources::tickets::handlers::get_ticket(
-                    client,
-                    ticket_number,
-                ).await
-                    .unwrap();
+                let ticket =
+                    zendesk::resources::tickets::handlers::get_ticket(client, ticket_number)
+                        .await
+                        .unwrap();
                 if !context.quiet {
                     println!("{:#?}", ticket)
                 }
