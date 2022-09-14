@@ -5,12 +5,13 @@ use figment::{
     Figment,
 };
 
-use crate::lib::cli::{build_cli, process_matches, Context};
+use crate::cli::{build_cli, process_matches, Context};
 
-mod lib;
+mod cli;
+mod integrations;
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
+async fn main() {
     let mut config_toml_path = dirs::config_dir().expect("Failed to get user config directory");
     config_toml_path.push("darbia");
     config_toml_path.push("fido.toml");
@@ -46,7 +47,5 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let context = Context::new(matches.is_present("quiet"));
 
-    process_matches(context, config_builder, matches);
-
-    Ok(())
+    process_matches(context, config_builder, matches).await;
 }

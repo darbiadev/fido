@@ -1,7 +1,6 @@
 use business_central::UrlKeyValue;
 use clap::{Arg, ArgMatches, Command};
 use figment::Figment;
-use futures::executor;
 use serde::Deserialize;
 
 use crate::Context;
@@ -66,7 +65,11 @@ struct Config {
     web_service_access_key: String,
 }
 
-pub(crate) fn process_matches(context: Context, config_builder: Figment, matches: &ArgMatches) {
+pub(crate) async fn process_matches(
+    context: Context,
+    config_builder: Figment,
+    matches: &ArgMatches,
+) {
     let config: Config = config_builder.select("business_central").extract().unwrap();
     let client = business_central::BusinessCentralServices::new(
         config.base_url,
@@ -91,13 +94,12 @@ pub(crate) fn process_matches(context: Context, config_builder: Figment, matches
                         }
                     }
                 }
-                let sales_order = executor::block_on(
-                    business_central::resources::sales_orders::handlers::get_generic(
-                        client,
-                        path,
-                        resource_values,
-                    ),
+                let sales_order = business_central::resources::sales_orders::handlers::get_generic(
+                    client,
+                    path,
+                    resource_values,
                 )
+                .await
                 .unwrap();
                 if !context.quiet {
                     println!("{:#?}", sales_order)
@@ -109,12 +111,11 @@ pub(crate) fn process_matches(context: Context, config_builder: Figment, matches
     } else if let Some(matches) = matches.subcommand_matches("orders") {
         if let Some(matches) = matches.subcommand_matches("get") {
             if let Some(order_number) = matches.value_of("order-number") {
-                let sales_order = executor::block_on(
-                    business_central::resources::sales_orders::handlers::get_order(
-                        client,
-                        order_number,
-                    ),
+                let sales_order = business_central::resources::sales_orders::handlers::get_order(
+                    client,
+                    order_number,
                 )
+                .await
                 .unwrap();
                 if !context.quiet {
                     println!("{:#?}", sales_order)
