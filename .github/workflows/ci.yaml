@@ -82,7 +82,7 @@ jobs:
       - uses: Swatinem/rust-cache@6720f05bc48b77f96918929a9019fb2203ff71f8
         if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
 
-      - run: cargo clippy --all-targets --workspace -- -D warnings
+      - run: cargo clippy --all-targets --workspace -- -D clippy::all -D clippy::pedantic
         if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
 
   # Run cargo --check on all platforms

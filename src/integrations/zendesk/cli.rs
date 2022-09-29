@@ -1,10 +1,11 @@
 use clap::{Arg, ArgMatches, Command};
 use figment::Figment;
 use serde::Deserialize;
+use zendesk::resources::tickets::handlers::get_ticket;
 
 use crate::Context;
 
-#[derive(Debug, Deserialize)]
+#[derive(Deserialize)]
 struct Config {
     base_url: String,
     email: String,
@@ -12,7 +13,7 @@ struct Config {
     oauth_client_id: String,
 }
 
-pub(crate) fn build_command() -> Command<'static> {
+pub(crate) fn build_command() -> Command {
     Command::new("zendesk")
         .about("Interact with Zendesk")
         .subcommand(
@@ -22,11 +23,7 @@ pub(crate) fn build_command() -> Command<'static> {
                     Command::new("get")
                         .about("Get ticket")
                         .long_about("Get a ticket from Zendesk")
-                        .arg(
-                            Arg::new("ticket-number")
-                                .help("Ticket number")
-                                .takes_value(true),
-                        ),
+                        .arg(Arg::new("ticket-number").help("Ticket number")),
                 ),
         )
 }
@@ -46,14 +43,11 @@ pub(crate) async fn process_matches(
 
     if let Some(matches) = matches.subcommand_matches("tickets") {
         if let Some(matches) = matches.subcommand_matches("get") {
-            if let Some(ticket_number) = matches.value_of("ticket-number") {
+            if let Some(ticket_number) = matches.get_one::<String>("ticket-number") {
                 client.update_token().await;
-                let ticket =
-                    zendesk::resources::tickets::handlers::get_ticket(client, ticket_number)
-                        .await
-                        .unwrap();
+                let ticket = get_ticket(client, ticket_number).await.unwrap();
                 if !context.quiet {
-                    println!("{:#?}", ticket)
+                    println!("{:#?}", ticket);
                 }
             }
         }

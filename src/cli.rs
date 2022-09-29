@@ -1,4 +1,4 @@
-use clap::{crate_authors, crate_version, value_parser, Arg, ArgMatches, Command};
+use clap::{command, value_parser, Arg, ArgAction, ArgMatches, Command};
 use clap_complete::{generate, Generator, Shell};
 
 pub(crate) struct Context {
@@ -11,20 +11,18 @@ impl Context {
     }
 }
 
-pub(crate) fn build_cli() -> Command<'static> {
-    Command::new("fido")
-        .about("FIDO CLI")
-        .version(crate_version!())
-        .author(crate_authors!("\n"))
+pub(crate) fn build_cli() -> Command {
+    command!()
         .infer_long_args(true)
         .infer_subcommands(true)
         .arg_required_else_help(true)
         .arg(
             Arg::new("verbose")
                 .short('v')
+                .long("verbose")
                 .conflicts_with("quiet")
-                .help("Sets the level of verbosity")
-                .multiple_occurrences(true),
+                .action(ArgAction::Count)
+                .help("Sets the level of verbosity"),
         )
         .arg(
             Arg::new("quiet")
@@ -38,8 +36,7 @@ pub(crate) fn build_cli() -> Command<'static> {
                 .short('c')
                 .long("config")
                 .value_name("FILE")
-                .help("Sets a custom config file")
-                .takes_value(true),
+                .help("Sets a custom config file"),
         )
         .subcommand(
             Command::new("completions")
@@ -49,8 +46,7 @@ pub(crate) fn build_cli() -> Command<'static> {
                     Arg::new("generator")
                         .long("generate")
                         .help("The shell to generate completions for")
-                        .value_parser(value_parser!(Shell))
-                        .takes_value(true),
+                        .value_parser(value_parser!(Shell)),
                 ),
         )
         .subcommand(crate::integrations::business_central::cli::build_command())
@@ -77,9 +73,9 @@ pub(crate) async fn process_matches(
             config_builder,
             matches,
         )
-        .await
+        .await;
     } else if let Some(matches) = matches.subcommand_matches("zendesk") {
-        crate::integrations::zendesk::cli::process_matches(context, config_builder, matches).await
+        crate::integrations::zendesk::cli::process_matches(context, config_builder, matches).await;
     }
 }
 
@@ -90,7 +86,6 @@ mod tests {
     #[test]
     fn build_app_works() {
         let app = build_cli();
-
-        assert_eq!(app.get_name(), "fido");
+        app.debug_assert();
     }
 }
