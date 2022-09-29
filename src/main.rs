@@ -22,13 +22,13 @@ async fn main() {
 
     let matches = build_cli().get_matches();
 
-    if let Some(passed_config_file) = matches.value_of("config-file") {
+    if let Some(config_file) = matches.get_one::<String>("config-file") {
         config_builder = config_builder
             .clone()
-            .merge(Toml::file(passed_config_file).nested());
+            .merge(Toml::file(config_file).nested());
     }
 
-    let mut log_level = match matches.occurrences_of("verbose") {
+    let mut log_level = match matches.get_count("verbose") {
         0 => tracing_subscriber::filter::LevelFilter::ERROR,
         1 => tracing_subscriber::filter::LevelFilter::WARN,
         2 => tracing_subscriber::filter::LevelFilter::INFO,
@@ -36,7 +36,7 @@ async fn main() {
         _ => tracing_subscriber::filter::LevelFilter::TRACE,
     };
 
-    if matches.is_present("quiet") {
+    if matches.contains_id("quiet") {
         log_level = tracing_subscriber::filter::LevelFilter::OFF;
     }
 
@@ -45,7 +45,7 @@ async fn main() {
         .with_max_level(log_level)
         .init();
 
-    let context = Context::new(matches.is_present("quiet"));
+    let context = Context::new(matches.contains_id("quiet"));
 
     process_matches(context, config_builder, matches).await;
 }

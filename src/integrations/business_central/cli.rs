@@ -1,3 +1,4 @@
+use business_central::resources::sales_orders::handlers::{get_generic, get_order};
 use business_central::UrlKeyValue;
 use clap::{Arg, ArgMatches, Command};
 use figment::Figment;
@@ -5,7 +6,7 @@ use serde::Deserialize;
 
 use crate::Context;
 
-pub(crate) fn build_command() -> Command<'static> {
+pub(crate) fn build_command() -> Command {
     Command::new("business-central")
         .about("Interact with Business Central")
         .subcommand(
@@ -14,29 +15,13 @@ pub(crate) fn build_command() -> Command<'static> {
                 .subcommand(
                     Command::new("odata")
                         .about("Make authenticated odata requests")
-                        .arg(
-                            Arg::new("path")
-                                .help("path")
-                                .required(true)
-                                .takes_value(true),
-                        )
-                        .arg(
-                            Arg::new("resource_values")
-                                .help("resource_values")
-                                .multiple_values(true)
-                                .takes_value(true),
-                        ),
+                        .arg(Arg::new("path").help("path").required(true))
+                        .arg(Arg::new("resource_values").help("resource_values")),
                 )
                 .subcommand(
                     Command::new("unbound")
                         .about("Make authenticated unbound requests")
-                        .arg(
-                            Arg::new("path")
-                                .help("path")
-                                .required(true)
-                                .multiple_values(true)
-                                .takes_value(true),
-                        ),
+                        .arg(Arg::new("path").help("path").required(true)),
                 ),
         )
         .subcommand(
@@ -46,16 +31,12 @@ pub(crate) fn build_command() -> Command<'static> {
                     Command::new("get")
                         .about("Get order")
                         .long_about("Get an order from Business Central")
-                        .arg(
-                            Arg::new("order-number")
-                                .help("Order number")
-                                .takes_value(true),
-                        ),
+                        .arg(Arg::new("order-number").help("Order number")),
                 ),
         )
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Deserialize)]
 struct Config {
     base_url: String,
     tenant_id: String,
@@ -81,28 +62,26 @@ pub(crate) async fn process_matches(
     );
     if let Some(matches) = matches.subcommand_matches("api") {
         if let Some(matches) = matches.subcommand_matches("odata") {
-            if let Some(path) = matches.value_of("path") {
+            if let Some(path) = matches.get_one::<String>("path") {
                 let mut resource_values: Vec<UrlKeyValue> = Vec::new();
-                if matches.is_present("resource_values") {
-                    let values: Vec<&str> = matches.values_of("resource_values").unwrap().collect();
+                if matches.contains_id("resource_values") {
+                    let values: Vec<_> = matches
+                        .get_many::<String>("resource_values")
+                        .expect("contains_id")
+                        .map(std::string::String::as_str)
+                        .collect();
                     for value in values {
                         let parsed_value = value.parse::<i16>();
                         if let Ok(..) = parsed_value {
-                            resource_values.push(UrlKeyValue::Number(parsed_value.unwrap()))
+                            resource_values.push(UrlKeyValue::Number(parsed_value.unwrap()));
                         } else {
-                            resource_values.push(UrlKeyValue::Text(value.to_string()))
+                            resource_values.push(UrlKeyValue::Text(value.to_string()));
                         }
                     }
                 }
-                let sales_order = business_central::resources::sales_orders::handlers::get_generic(
-                    client,
-                    path,
-                    resource_values,
-                )
-                .await
-                .unwrap();
+                let sales_order = get_generic(client, path, resource_values).await.unwrap();
                 if !context.quiet {
-                    println!("{:#?}", sales_order)
+                    println!("{:#?}", sales_order);
                 }
             }
         } else if let Some(_matches) = matches.subcommand_matches("unbound") {
@@ -110,15 +89,10 @@ pub(crate) async fn process_matches(
         }
     } else if let Some(matches) = matches.subcommand_matches("orders") {
         if let Some(matches) = matches.subcommand_matches("get") {
-            if let Some(order_number) = matches.value_of("order-number") {
-                let sales_order = business_central::resources::sales_orders::handlers::get_order(
-                    client,
-                    order_number,
-                )
-                .await
-                .unwrap();
+            if let Some(order_number) = matches.get_one::<String>("order-number") {
+                let sales_order = get_order(client, order_number).await.unwrap();
                 if !context.quiet {
-                    println!("{:#?}", sales_order)
+                    println!("{:#?}", sales_order);
                 }
             }
         }
