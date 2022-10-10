@@ -49,7 +49,6 @@ pub(crate) fn build_cli() -> Command {
                         .value_parser(value_parser!(Shell)),
                 ),
         )
-        .subcommand(crate::integrations::business_central::cli::build_command())
         .subcommand(crate::integrations::zendesk::cli::build_command())
 }
 
@@ -67,13 +66,6 @@ pub(crate) async fn process_matches(
             let mut cmd = build_cli();
             print_completions(*generator, &mut cmd);
         }
-    } else if let Some(matches) = matches.subcommand_matches("business-central") {
-        crate::integrations::business_central::cli::process_matches(
-            context,
-            config_builder,
-            matches,
-        )
-        .await;
     } else if let Some(matches) = matches.subcommand_matches("zendesk") {
         crate::integrations::zendesk::cli::process_matches(context, config_builder, matches).await;
     }
