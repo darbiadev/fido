@@ -47,17 +47,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c1ad822118d20d2c234f427000d5acc36eabe1e29a348c89b63dd60b13f28e5d"
 
 [[package]]
-name = "business_central"
-version = "0.1.0"
-source = "git+https://github.com/darbiadev/business-central-rs#c60f6873b2fa16ad030b6574ffb71e69111fcc65"
-dependencies = [
- "reqwest",
- "serde",
- "serde_json",
- "tracing",
-]
-
-[[package]]
 name = "bytes"
 version = "1.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -184,7 +173,6 @@ dependencies = [
 name = "fido"
 version = "0.1.0"
 dependencies = [
- "business_central",
  "clap",
  "clap_complete",
  "dirs",
