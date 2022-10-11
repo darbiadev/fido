@@ -15,7 +15,7 @@ on:
       - main
 
 jobs:
-  rustfmt:
+  rustfmt:    
     runs-on: ubuntu-latest
     steps:
       - id: skip_check
@@ -44,6 +44,7 @@ jobs:
         if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
 
   clippy:
+    needs: [ rustfmt ]
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -79,7 +80,7 @@ jobs:
         if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
 
   test:
-    needs: [ rustfmt, clippy ]
+    needs: [ clippy ]
     runs-on: ${{ matrix.triple.os }}
     continue-on-error: true
     strategy:
