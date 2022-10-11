@@ -71,13 +71,7 @@ pub(crate) async fn process_matches(
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn build_app_works() {
-        let app = build_cli();
-        app.debug_assert();
-    }
+#[test]
+fn verify_cmd() {
+    build_cli().debug_assert();
 }
