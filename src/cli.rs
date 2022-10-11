@@ -72,6 +72,6 @@ pub(crate) async fn process_matches(
 }
 
 #[test]
-fn verify_cmd() {
+fn verify_cli() {
     build_cli().debug_assert();
 }
