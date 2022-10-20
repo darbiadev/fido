@@ -76,7 +76,7 @@ jobs:
       - uses: Swatinem/rust-cache@22c9328bcba27aa81a32b1bef27c7e3c78052531
         if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
 
-      - run: cargo clippy --all-targets --workspace -- -D clippy::all -D clippy::pedantic
+      - run: cargo clippy --all-targets --workspace -- -D clippy::all -D clippy::pedantic -D clippy::cargo
         if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
 
   test:
