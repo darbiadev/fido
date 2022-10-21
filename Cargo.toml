@@ -7,6 +7,8 @@ authors = ["Bradley Reynolds <bradley.reynolds@darbia.dev>"]
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/darbiadev/fido/"
+keywords = ["cli"]
+categories = ["cli", "automation"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
