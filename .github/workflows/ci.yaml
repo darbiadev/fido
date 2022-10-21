@@ -23,7 +23,7 @@ jobs:
         with:
           concurrent_skipping: "same_content_newer"
           skip_after_successful_duplicate: "true"
-          paths: '[".cargo/**", ".github/workflows/ci.yml", "sample_configs/**", "src/**", "tests/**", "build.rs", "Cargo.lock", "Cargo.toml", "clippy.toml", "rustfmt.toml"]'
+          paths: '[".cargo/**", ".github/workflows/ci.yaml", "sample_configs/**", "src/**", "tests/**", "build.rs", "Cargo.lock", "Cargo.toml", "clippy.toml", "rustfmt.toml"]'
           do_not_skip: '["workflow_dispatch"]'
 
       - uses: actions/checkout@v3
@@ -59,7 +59,7 @@ jobs:
         with:
           concurrent_skipping: "same_content_newer"
           skip_after_successful_duplicate: "true"
-          paths: '[".cargo/**", ".github/workflows/ci.yml", "sample_configs/**", "src/**", "tests/**", "build.rs", "Cargo.lock", "Cargo.toml", "clippy.toml", "rustfmt.toml"]'
+          paths: '[".cargo/**", ".github/workflows/ci.yaml", "sample_configs/**", "src/**", "tests/**", "build.rs", "Cargo.lock", "Cargo.toml", "clippy.toml", "rustfmt.toml"]'
           do_not_skip: '["workflow_dispatch"]'
 
       - uses: actions/checkout@v3
@@ -76,7 +76,7 @@ jobs:
       - uses: Swatinem/rust-cache@22c9328bcba27aa81a32b1bef27c7e3c78052531
         if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
 
-      - run: cargo clippy --all-targets --workspace -- -D clippy::all -D clippy::pedantic
+      - run: cargo clippy --all-targets --workspace -- -D clippy::all -D clippy::pedantic -D clippy::cargo
         if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
 
   test:
@@ -112,7 +112,7 @@ jobs:
         with:
           concurrent_skipping: "same_content_newer"
           skip_after_successful_duplicate: "true"
-          paths: '[".cargo/**", ".github/workflows/ci.yml", "sample_configs/**", "src/**", "tests/**", "build.rs", "Cargo.lock", "Cargo.toml", "clippy.toml", "rustfmt.toml"]'
+          paths: '[".cargo/**", ".github/workflows/ci.yaml", "sample_configs/**", "src/**", "tests/**", "build.rs", "Cargo.lock", "Cargo.toml", "clippy.toml", "rustfmt.toml"]'
           do_not_skip: '["workflow_dispatch"]'
 
       - uses: actions/checkout@v3
