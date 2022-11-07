@@ -11,11 +11,7 @@ pub(crate) fn build_command() -> Command {
         .subcommand(Command::new("sample").about("Run sample"))
 }
 
-pub(crate) fn process_matches(
-    _context: Context,
-    _config_builder: Figment,
-    matches: &ArgMatches,
-) {
+pub(crate) fn process_matches(_context: Context, _config_builder: Figment, matches: &ArgMatches) {
     if let Some(_matches) = matches.subcommand_matches("sample") {
         run_py_sample().unwrap();
     }
