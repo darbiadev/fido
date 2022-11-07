@@ -26,3 +26,4 @@ zendesk = { git = "https://github.com/darbiadev/zendesk-rs" }
 figment = { version = "0.10.8", features = ["env", "toml"] }
 dirs = "4.0.0"
 futures = "0.3.25"
+pyo3 = { version = "0.17.3", features = ["auto-initialize"] }
