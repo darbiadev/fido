@@ -50,6 +50,7 @@ pub(crate) fn build_cli() -> Command {
                 ),
         )
         .subcommand(crate::integrations::zendesk::cli::build_command())
+        .subcommand(crate::integrations::python::cli::build_command())
 }
 
 fn print_completions<G: Generator>(gen: G, cmd: &mut Command) {
@@ -68,6 +69,8 @@ pub(crate) async fn process_matches(
         }
     } else if let Some(matches) = matches.subcommand_matches("zendesk") {
         crate::integrations::zendesk::cli::process_matches(context, config_builder, matches).await;
+    } else if let Some(matches) = matches.subcommand_matches("python") {
+        crate::integrations::python::cli::process_matches(&context, &config_builder, matches);
     }
 }
 

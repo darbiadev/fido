@@ -1,5 +1,8 @@
 //! Fido
 
+#![allow(clippy::multiple_crate_versions)]
+#![warn(rust_2018_idioms)]
+
 use figment::{
     providers::{Env, Format, Toml},
     Figment,
