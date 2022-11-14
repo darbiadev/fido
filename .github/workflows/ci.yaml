@@ -37,7 +37,7 @@ jobs:
           override: true
           components: rustfmt
 
-      - uses: Swatinem/rust-cache@v1
+      - uses: Swatinem/rust-cache@359a70e43a0bb8a13953b04a90f76428b4959bb6
         if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
 
       - run: cargo fmt --all -- --check
@@ -73,7 +73,7 @@ jobs:
           override: true
           components: clippy
 
-      - uses: Swatinem/rust-cache@v1
+      - uses: Swatinem/rust-cache@359a70e43a0bb8a13953b04a90f76428b4959bb6
         if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
 
       - run: cargo clippy -- -D clippy::all -D clippy::pedantic -D clippy::cargo
@@ -121,7 +121,7 @@ jobs:
           override: true
           target: ${{ matrix.triple.target }}
 
-      - uses: Swatinem/rust-cache@v1
+      - uses: Swatinem/rust-cache@359a70e43a0bb8a13953b04a90f76428b4959bb6
         if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
         with:
           key: ${{ matrix.triple.target }}
