@@ -1,4 +1,4 @@
-use clap::{command, value_parser, Arg, ArgAction, ArgMatches, Command};
+use clap::{Arg, ArgAction, ArgMatches, command, Command, value_parser};
 use clap_complete::{generate, Generator, Shell};
 
 pub(crate) struct Context {
@@ -51,6 +51,7 @@ pub(crate) fn build_cli() -> Command {
         )
         .subcommand(crate::integrations::zendesk::cli::build_command())
         .subcommand(crate::integrations::python::cli::build_command())
+        .subcommand(crate::integrations::shelby::cli::build_command())
 }
 
 fn print_completions<G: Generator>(gen: G, cmd: &mut Command) {
@@ -71,6 +72,8 @@ pub(crate) async fn process_matches(
         crate::integrations::zendesk::cli::process_matches(context, config_builder, matches).await;
     } else if let Some(matches) = matches.subcommand_matches("python") {
         crate::integrations::python::cli::process_matches(&context, &config_builder, matches);
+    } else if let Some(matches) = matches.subcommand_matches("shelby") {
+        crate::integrations::shelby::cli::process_matches(&context, &config_builder, matches);
     }
 }
 
