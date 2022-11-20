@@ -1,6 +1,6 @@
 [package]
 name = "fido"
-description = "Fido CLI"
+description = "Internal CLI used for automation and testing"
 version = "0.1.0"
 edition = "2021"
 authors = ["Bradley Reynolds <bradley.reynolds@darbia.dev>"]
