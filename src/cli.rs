@@ -1,4 +1,4 @@
-use clap::{Arg, ArgAction, ArgMatches, command, Command, value_parser};
+use clap::{command, value_parser, Arg, ArgAction, ArgMatches, Command};
 use clap_complete::{generate, Generator, Shell};
 
 pub(crate) struct Context {
