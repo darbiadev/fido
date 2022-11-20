@@ -993,7 +993,7 @@ dependencies = [
 [[package]]
 name = "shelby"
 version = "0.1.0"
-source = "git+https://github.com/darbiadev/shelby#5e437ab69c060e35613fefdb82afb0ae1008196f"
+source = "git+https://github.com/darbiadev/shelby#393845d7be940d307dc840691885737fa24283fb"
 
 [[package]]
 name = "signal-hook-registry"
