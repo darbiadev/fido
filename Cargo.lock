@@ -1658,7 +1658,7 @@ checksum = "09041cd90cf85f7f8b2df60c646f853b7f535ce68f85244eb6731cf89fa498ec"
 [[package]]
 name = "zendesk"
 version = "0.1.0"
-source = "git+https://github.com/darbiadev/zendesk-rs#1959934c522fe127c486b37c728d5c90c0caa3df"
+source = "git+https://github.com/darbiadev/zendesk-rs#080375f1762c169faafb4a571e648e4017e624c3"
 dependencies = [
  "reqwest",
  "serde",
