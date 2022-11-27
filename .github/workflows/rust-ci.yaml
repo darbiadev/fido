@@ -13,13 +13,7 @@ jobs:
 
   clippy:
     needs: lint
-    strategy:
-      matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
-
     uses: darbiadev/.github/.github/workflows/rust-clippy.yaml@main
-    with:
-      os: ${{ matrix.os }}
 
   test:
     needs: clippy
