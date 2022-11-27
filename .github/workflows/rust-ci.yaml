@@ -41,5 +41,5 @@ jobs:
 
     uses: darbiadev/.github/.github/workflows/rust-test.yaml@main
     with:
-      os: ${{ matrix.os }}
-      target: ${{ matrix.target }}
+      os: ${{ matrix.triple.os }}
+      target: ${{ matrix.triple.target }}
