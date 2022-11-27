@@ -22,7 +22,7 @@ jobs:
       os: ${{ matrix.os }}
 
   test:
-    needs: [ clippy ]
+    needs: clippy
     strategy:
       matrix:
         triple:
@@ -38,6 +38,7 @@ jobs:
             os: "windows-latest",
             target: "x86_64-pc-windows-msvc",
           }
+
     uses: darbiadev/.github/.github/workflows/rust-test.yaml@main
     with:
       os: ${{ matrix.os }}
