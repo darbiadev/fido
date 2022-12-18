@@ -28,11 +28,8 @@ pub(crate) fn build_command() -> Command {
         )
 }
 
-pub(crate) async fn process_matches(
-    context: Context,
-    config_builder: Figment,
-    matches: &ArgMatches,
-) {
+pub(crate) async fn process_matches(config_builder: Figment, matches: &ArgMatches) {
+    let context = Context::from_matches(matches);
     let config: Config = config_builder.select("zendesk").extract().unwrap();
     let mut client = zendesk::Client::new(
         config.base_url,

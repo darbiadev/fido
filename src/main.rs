@@ -48,7 +48,5 @@ async fn main() {
         .with_max_level(log_level)
         .init();
 
-    let context = Context::new(matches.contains_id("quiet"));
-
-    process_matches(context, config_builder, matches).await;
+    process_matches(config_builder, matches).await;
 }

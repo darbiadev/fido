@@ -14,7 +14,8 @@ pub(crate) fn build_command() -> Command {
         )
 }
 
-pub(crate) fn process_matches(context: &Context, _config_builder: &Figment, matches: &ArgMatches) {
+pub(crate) fn process_matches(_config_builder: &Figment, matches: &ArgMatches) {
+    let context = Context::from_matches(matches);
     if let Some(matches) = matches.subcommand_matches("eval") {
         if let Some(data) = matches.get_one::<String>("data") {
             let result = run_shelby(data.to_string());
