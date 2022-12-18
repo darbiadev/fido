@@ -1,18 +1,24 @@
+//! CLI
+
 use clap::{command, value_parser, Arg, ArgAction, ArgMatches, Command};
 use clap_complete::{generate, Generator, Shell};
 
+/// Command execution context
 #[derive(Debug)]
 pub(crate) struct Context {
+    /// No output when enabled
     pub(crate) quiet: bool,
 }
 
 impl Context {
+    /// Build context from matches
     pub(crate) fn from_matches(matches: &ArgMatches) -> Context {
         let quiet = matches.get_one::<bool>("quiet").unwrap();
         Context { quiet: *quiet }
     }
 }
 
+/// Build the main CLI
 pub(crate) fn build_cli() -> Command {
     command!()
         .infer_long_args(true)
@@ -59,10 +65,12 @@ pub(crate) fn build_cli() -> Command {
         .subcommand(crate::integrations::shelby::cli::build_command())
 }
 
+/// Generate completions and print to STDOUT
 fn print_completions<G: Generator>(gen: G, cmd: &mut Command) {
     generate(gen, cmd, cmd.get_name().to_string(), &mut std::io::stdout());
 }
 
+/// Process parsed matches and dispatch to subcommands
 pub(crate) async fn process_matches(config_builder: figment::Figment, matches: ArgMatches) {
     if let Some(matches) = matches.subcommand_matches("completions") {
         if let Some(generator) = matches.get_one::<Shell>("generator") {

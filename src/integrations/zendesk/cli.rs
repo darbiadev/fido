@@ -1,3 +1,5 @@
+//! Using Zendesk
+
 use clap::{Arg, ArgMatches, Command};
 use figment::Figment;
 use serde::Deserialize;
@@ -5,14 +7,20 @@ use zendesk::resources::tickets::handlers::get_ticket;
 
 use crate::Context;
 
+/// Auth config
 #[derive(Deserialize)]
 struct Config {
+    /// Base URL of the instance
     base_url: String,
+    /// Account email
     email: String,
+    /// Auth token
     api_token: String,
+    /// OAUTH application client ID
     oauth_client_id: String,
 }
 
+/// Build the Clap command
 pub(crate) fn build_command() -> Command {
     Command::new("zendesk")
         .about("Interact with Zendesk")
@@ -28,6 +36,7 @@ pub(crate) fn build_command() -> Command {
         )
 }
 
+/// Process parsed matches and dispatch to functions
 pub(crate) async fn process_matches(config_builder: Figment, matches: &ArgMatches) {
     let context = Context::from_matches(matches);
     let config: Config = config_builder.select("zendesk").extract().unwrap();
