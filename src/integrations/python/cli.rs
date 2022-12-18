@@ -1,9 +1,12 @@
+//! Running Python
+
 use clap::{Arg, ArgMatches, Command};
 use figment::Figment;
 use pyo3::{prelude::*, types::PyDict};
 
 use crate::Context;
 
+/// Build the Clap command
 pub(crate) fn build_command() -> Command {
     Command::new("python")
         .about("Interact with Python")
@@ -14,6 +17,7 @@ pub(crate) fn build_command() -> Command {
         )
 }
 
+/// Process parsed matches and dispatch to functions
 pub(crate) fn process_matches(_config_builder: &Figment, matches: &ArgMatches) {
     let context = Context::from_matches(matches);
     if let Some(matches) = matches.subcommand_matches("eval") {
@@ -29,6 +33,7 @@ pub(crate) fn process_matches(_config_builder: &Figment, matches: &ArgMatches) {
     }
 }
 
+/// Run Python code
 fn run_py(code: &str) -> Result<String, PyErr> {
     Python::with_gil(|py| {
         let locals = PyDict::new(py);

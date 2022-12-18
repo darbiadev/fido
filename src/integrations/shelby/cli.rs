@@ -1,9 +1,12 @@
+//! Running Shelby
+
 use clap::{Arg, ArgMatches, Command};
 use figment::Figment;
 use shelby::Shelby;
 
 use crate::Context;
 
+/// Build the Clap command
 pub(crate) fn build_command() -> Command {
     Command::new("shelby")
         .about("Interact with shelby")
@@ -14,6 +17,7 @@ pub(crate) fn build_command() -> Command {
         )
 }
 
+/// Process parsed matches and dispatch to functions
 pub(crate) fn process_matches(_config_builder: &Figment, matches: &ArgMatches) {
     let context = Context::from_matches(matches);
     if let Some(matches) = matches.subcommand_matches("eval") {
@@ -26,6 +30,7 @@ pub(crate) fn process_matches(_config_builder: &Figment, matches: &ArgMatches) {
     }
 }
 
+/// Run Shelby
 fn run_shelby(data: String) -> String {
     let client = Shelby::new(true);
     client.parse(data)

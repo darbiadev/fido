@@ -1,5 +1,6 @@
 //! Fido
 
+#![forbid(clippy::missing_docs_in_private_items)]
 #![allow(clippy::multiple_crate_versions)]
 #![warn(rust_2018_idioms)]
 
