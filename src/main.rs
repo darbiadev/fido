@@ -40,7 +40,7 @@ async fn main() {
         _ => tracing_subscriber::filter::LevelFilter::TRACE,
     };
 
-    if matches.contains_id("quiet") {
+    if Context::from_matches(&matches).quiet {
         log_level = tracing_subscriber::filter::LevelFilter::OFF;
     }
 
