@@ -1,13 +1,15 @@
 use clap::{command, value_parser, Arg, ArgAction, ArgMatches, Command};
 use clap_complete::{generate, Generator, Shell};
 
+#[derive(Debug)]
 pub(crate) struct Context {
     pub(crate) quiet: bool,
 }
 
 impl Context {
-    pub fn new(quiet: bool) -> Context {
-        Context { quiet }
+    pub(crate) fn from_matches(matches: &ArgMatches) -> Context {
+        let quiet = matches.get_one::<bool>("quiet").unwrap();
+        Context { quiet: *quiet }
     }
 }
 
@@ -22,14 +24,17 @@ pub(crate) fn build_cli() -> Command {
                 .long("verbose")
                 .conflicts_with("quiet")
                 .action(ArgAction::Count)
-                .help("Sets the level of verbosity"),
+                .help("Sets the level of verbosity")
+                .global(true),
         )
         .arg(
             Arg::new("quiet")
                 .short('q')
                 .long("quiet")
                 .conflicts_with("verbose")
-                .help("Suppresses all output"),
+                .action(ArgAction::SetTrue)
+                .help("Suppresses all output")
+                .global(true),
         )
         .arg(
             Arg::new("config-file")
@@ -58,22 +63,18 @@ fn print_completions<G: Generator>(gen: G, cmd: &mut Command) {
     generate(gen, cmd, cmd.get_name().to_string(), &mut std::io::stdout());
 }
 
-pub(crate) async fn process_matches(
-    context: Context,
-    config_builder: figment::Figment,
-    matches: ArgMatches,
-) {
+pub(crate) async fn process_matches(config_builder: figment::Figment, matches: ArgMatches) {
     if let Some(matches) = matches.subcommand_matches("completions") {
         if let Some(generator) = matches.get_one::<Shell>("generator") {
             let mut cmd = build_cli();
             print_completions(*generator, &mut cmd);
         }
     } else if let Some(matches) = matches.subcommand_matches("zendesk") {
-        crate::integrations::zendesk::cli::process_matches(context, config_builder, matches).await;
+        crate::integrations::zendesk::cli::process_matches(config_builder, matches).await;
     } else if let Some(matches) = matches.subcommand_matches("python") {
-        crate::integrations::python::cli::process_matches(&context, &config_builder, matches);
+        crate::integrations::python::cli::process_matches(&config_builder, matches);
     } else if let Some(matches) = matches.subcommand_matches("shelby") {
-        crate::integrations::shelby::cli::process_matches(&context, &config_builder, matches);
+        crate::integrations::shelby::cli::process_matches(&config_builder, matches);
     }
 }
 
