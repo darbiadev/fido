@@ -22,7 +22,7 @@ pub(crate) fn process_matches(context: &Context, _config_builder: &Figment, matc
                 Err(error) => error.to_string(),
             };
             if !context.quiet {
-                println!("{:#?}", string);
+                println!("{string:#?}");
             }
         }
     }

@@ -19,7 +19,7 @@ pub(crate) fn process_matches(context: &Context, _config_builder: &Figment, matc
         if let Some(data) = matches.get_one::<String>("data") {
             let result = run_shelby(data.to_string());
             if !context.quiet {
-                println!("{:#?}", result);
+                println!("{result:#?}");
             }
         }
     }

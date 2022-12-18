@@ -47,7 +47,7 @@ pub(crate) async fn process_matches(
                 client.update_token().await;
                 let ticket = get_ticket(client, ticket_number).await.unwrap();
                 if !context.quiet {
-                    println!("{:#?}", ticket);
+                    println!("{ticket:#?}");
                 }
             }
         }
