@@ -1,4 +1,0 @@
-fido
-====
-
-Automation CLI
