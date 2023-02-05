@@ -1,4 +1,4 @@
-name: Rust CI
+name: "Rust CI"
 
 on:
   workflow_dispatch:
@@ -9,11 +9,11 @@ on:
 
 jobs:
   lint:
-    uses: darbiadev/.github/.github/workflows/rust-lint.yaml@main
+    uses: darbiadev/.github/.github/workflows/rust-lint.yaml@c194ec59628447c17718ee155e52060ef92dc406
 
   clippy:
     needs: lint
-    uses: darbiadev/.github/.github/workflows/rust-clippy.yaml@main
+    uses: darbiadev/.github/.github/workflows/rust-clippy.yaml@c194ec59628447c17718ee155e52060ef92dc406
 
   test:
     needs: clippy
@@ -33,7 +33,7 @@ jobs:
             target: "x86_64-pc-windows-msvc",
           }
 
-    uses: darbiadev/.github/.github/workflows/rust-test.yaml@main
+    uses: darbiadev/.github/.github/workflows/rust-test.yaml@c194ec59628447c17718ee155e52060ef92dc406
     with:
       os: ${{ matrix.triple.os }}
       target: ${{ matrix.triple.target }}
