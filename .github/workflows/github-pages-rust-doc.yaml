@@ -1,4 +1,4 @@
-name: GitHub Pages - Rust doc
+name: "GitHub Pages - Rust doc"
 
 on:
   push:
@@ -7,4 +7,4 @@ on:
 
 jobs:
   docs:
-    uses: darbiadev/.github/.github/workflows/github-pages-rust-doc.yaml@main
+    uses: darbiadev/.github/.github/workflows/github-pages-rust-doc.yaml@c194ec59628447c17718ee155e52060ef92dc406
