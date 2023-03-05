@@ -13,4 +13,4 @@ permissions:
 
 jobs:
   docs:
-    uses: darbiadev/.github/.github/workflows/github-pages-rust-doc.yaml@c194ec59628447c17718ee155e52060ef92dc406
+    uses: darbiadev/.github/.github/workflows/github-pages-rust-doc.yaml@c6e8cd8568c3872c86bc65ec43483343b3c98480
