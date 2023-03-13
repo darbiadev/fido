@@ -26,5 +26,5 @@ zendesk = { git = "https://github.com/darbiadev/zendesk-rs" }
 shelby = { git = "https://github.com/darbiadev/shelby", version = "0.1.0" }
 figment = { version = "0.10.8", features = ["env", "toml"] }
 dirs = "4.0.0"
-futures = "0.3.26"
+futures = "0.3.27"
 pyo3 = { version = "0.18.1", features = ["auto-initialize"] }
