@@ -38,7 +38,7 @@ fn run_py(code: &str) -> Result<String, PyErr> {
     Python::with_gil(|py| {
         let locals = PyDict::new(py);
         py.run(code, None, Some(locals))?;
-        let output = locals.get_item("output").unwrap();
-        Ok(output.to_string())
+        let output = locals.get_item("output").expect("No output");
+        Ok(output.expect("Failed to unwrap output").to_string())
     })
 }
