@@ -8,11 +8,11 @@ on:
 
 jobs:
   lint:
-    uses: darbiadev/.github/.github/workflows/rust-lint.yaml@b0749d50c2f32c5672a7c459f55f39416941c26d # v5.1.0
+    uses: darbiadev/.github/.github/workflows/rust-lint.yaml@ea97d99e1520c46080c4c9032a69552e491474ac # v13.0.0
 
   clippy:
     needs: lint
-    uses: darbiadev/.github/.github/workflows/rust-clippy.yaml@b0749d50c2f32c5672a7c459f55f39416941c26d # v5.1.0
+    uses: darbiadev/.github/.github/workflows/rust-clippy.yaml@ea97d99e1520c46080c4c9032a69552e491474ac # v13.0.0
 
   test:
     needs: clippy
@@ -21,7 +21,7 @@ jobs:
         triple:
           - { os: "ubuntu-latest", target: "x86_64-unknown-linux-gnu" }
 
-    uses: darbiadev/.github/.github/workflows/rust-test.yaml@b0749d50c2f32c5672a7c459f55f39416941c26d # v5.1.0
+    uses: darbiadev/.github/.github/workflows/rust-test.yaml@ea97d99e1520c46080c4c9032a69552e491474ac # v13.0.0
     with:
       os: ${{ matrix.triple.os }}
       target: ${{ matrix.triple.target }}
@@ -31,7 +31,7 @@ jobs:
       contents: read
       pages: write
       id-token: write
-    uses: darbiadev/.github/.github/workflows/github-pages-rust-doc.yaml@b0749d50c2f32c5672a7c459f55f39416941c26d # v5.1.0
+    uses: darbiadev/.github/.github/workflows/github-pages-rust-doc.yaml@ea97d99e1520c46080c4c9032a69552e491474ac # v13.0.0
 
   coverage:
     runs-on: ubuntu-latest
@@ -41,7 +41,7 @@ jobs:
 
       - name: "Cache Rust and project dependencies"
         id: cache
-        uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84 # v3.3.2
+        uses: actions/cache@13aacd865c20de90d75de3b17ebe84f7a17d57d2 # v4.0.0
         with:
           path: |
             ~/.cargo/bin/
@@ -65,6 +65,6 @@ jobs:
           grcov . -s . --binary-path ./target/debug/ -t lcov --branch --ignore-not-existing --ignore "/*" -o lcov.info
 
       - name: "Upload coverage reports to Codecov"
-        uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
+        uses: codecov/codecov-action@f30e4959ba63075080d4f7f90cacc18d9f3fafd7 # v4.0.0
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
