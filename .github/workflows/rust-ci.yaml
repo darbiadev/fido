@@ -8,11 +8,11 @@ on:
 
 jobs:
   lint:
-    uses: darbiadev/.github/.github/workflows/rust-lint.yaml@ea97d99e1520c46080c4c9032a69552e491474ac # v13.0.0
+    uses: darbiadev/.github/.github/workflows/rust-lint.yaml@29197a38ef3741064f47b623ede0c1ad22402c57 # v13.0.3
 
   clippy:
     needs: lint
-    uses: darbiadev/.github/.github/workflows/rust-clippy.yaml@ea97d99e1520c46080c4c9032a69552e491474ac # v13.0.0
+    uses: darbiadev/.github/.github/workflows/rust-clippy.yaml@29197a38ef3741064f47b623ede0c1ad22402c57 # v13.0.3
 
   test:
     needs: clippy
@@ -21,7 +21,7 @@ jobs:
         triple:
           - { os: "ubuntu-latest", target: "x86_64-unknown-linux-gnu" }
 
-    uses: darbiadev/.github/.github/workflows/rust-test.yaml@ea97d99e1520c46080c4c9032a69552e491474ac # v13.0.0
+    uses: darbiadev/.github/.github/workflows/rust-test.yaml@29197a38ef3741064f47b623ede0c1ad22402c57 # v13.0.3
     with:
       os: ${{ matrix.triple.os }}
       target: ${{ matrix.triple.target }}
@@ -31,17 +31,17 @@ jobs:
       contents: read
       pages: write
       id-token: write
-    uses: darbiadev/.github/.github/workflows/github-pages-rust-doc.yaml@ea97d99e1520c46080c4c9032a69552e491474ac # v13.0.0
+    uses: darbiadev/.github/.github/workflows/github-pages-rust-doc.yaml@29197a38ef3741064f47b623ede0c1ad22402c57 # v13.0.3
 
   coverage:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout repo"
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
 
       - name: "Cache Rust and project dependencies"
         id: cache
-        uses: actions/cache@ab5e6d0c87105b4c9c2047343972218f562e4319 # v4.0.1
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
         with:
           path: |
             ~/.cargo/bin/
@@ -65,6 +65,6 @@ jobs:
           grcov . -s . --binary-path ./target/debug/ -t lcov --branch --ignore-not-existing --ignore "/*" -o lcov.info
 
       - name: "Upload coverage reports to Codecov"
-        uses: codecov/codecov-action@54bcd8715eee62d40e33596ef5e8f0f48dbbccab # v4.1.0
+        uses: codecov/codecov-action@125fc84a9a348dbcf27191600683ec096ec9021c # v4.4.1
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
