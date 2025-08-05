@@ -3,6 +3,7 @@
 use clap::{Arg, ArgMatches, Command};
 use figment::Figment;
 use pyo3::{prelude::*, types::PyDict};
+use std::ffi::CString;
 
 use crate::Context;
 
@@ -37,7 +38,8 @@ pub(crate) fn process_matches(_config_builder: &Figment, matches: &ArgMatches) {
 fn run_py(code: &str) -> Result<String, PyErr> {
     Python::with_gil(|py| {
         let locals = PyDict::new(py);
-        py.run(code, None, Some(locals))?;
+        let code = CString::new(code).unwrap();
+        py.run(&code, None, Some(&locals))?;
         let output = locals.get_item("output").expect("No output");
         Ok(output.expect("Failed to unwrap output").to_string())
     })

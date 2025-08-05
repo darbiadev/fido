@@ -5,11 +5,11 @@
 #![warn(rust_2018_idioms)]
 
 use figment::{
-    providers::{Env, Format, Toml},
     Figment,
+    providers::{Env, Format, Toml},
 };
 
-use crate::cli::{build_cli, process_matches, Context};
+use crate::cli::{Context, build_cli, process_matches};
 
 mod cli;
 mod integrations;

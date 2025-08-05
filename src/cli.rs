@@ -1,7 +1,7 @@
 //! CLI
 
-use clap::{command, value_parser, Arg, ArgAction, ArgMatches, Command};
-use clap_complete::{generate, Generator, Shell};
+use clap::{Arg, ArgAction, ArgMatches, Command, command, value_parser};
+use clap_complete::{Generator, Shell, generate};
 
 /// Command execution context
 #[derive(Debug)]
@@ -66,8 +66,13 @@ pub(crate) fn build_cli() -> Command {
 }
 
 /// Generate completions and print to STDOUT
-fn print_completions<G: Generator>(gen: G, cmd: &mut Command) {
-    generate(gen, cmd, cmd.get_name().to_string(), &mut std::io::stdout());
+fn print_completions<G: Generator>(generator: G, cmd: &mut Command) {
+    generate(
+        generator,
+        cmd,
+        cmd.get_name().to_string(),
+        &mut std::io::stdout(),
+    );
 }
 
 /// Process parsed matches and dispatch to subcommands
