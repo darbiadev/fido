@@ -14,8 +14,8 @@ categories = ["command-line-utilities"]
 
 [dependencies]
 tokio = { version = "1.47.1", features = ["full"] }
-clap = { version = "4.5.42", features = ["cargo"] }
-clap_complete = "4.5.55"
+clap = { version = "4.5.46", features = ["cargo"] }
+clap_complete = "4.5.57"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1"
 reqwest = { version = "0.12", features = ["json"] }
@@ -27,4 +27,4 @@ shelby = { git = "https://github.com/darbiadev/shelby", version = "0.1.0" }
 figment = { version = "0.10.19", features = ["env", "toml"] }
 dirs = "6.0.0"
 futures = "0.3.31"
-pyo3 = "0.25.1"
+pyo3 = "0.26.0"
